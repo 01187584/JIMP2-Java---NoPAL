@@ -43,7 +43,7 @@ public final class Okno {
         selectOutputType.setLayout(null);
         JButton fileButton = new JButton("Stwórz plik");
         selectOutputType.add(fileButton);
-        fileButton.setBounds(100,250, 200, 250);
+        fileButton.setBounds(100,250, 200, 75);
         fileButton.setVisible(true);
         selectOutputType.setVisible(true);
     }
