@@ -36,16 +36,38 @@ public final class Okno {
 
     private void zapisListy()
     {
-        JDialog selectOutputType = new JDialog(GUI, "Lista kroków");
-        selectOutputType.setSize(400,400);
-        selectOutputType.setLocationRelativeTo(null);
-        selectOutputType.setResizable(false);
-        selectOutputType.setLayout(null);
+        JDialog mazeOutput = new JDialog(GUI, "Lista kroków");
+        mazeOutput.setSize(400,400);
+        mazeOutput.setLocationRelativeTo(null);
+        mazeOutput.setResizable(false);
+        mazeOutput.setLayout(null);
+
         JButton fileButton = new JButton("Stwórz plik");
-        selectOutputType.add(fileButton);
         fileButton.setBounds(100,250, 200, 75);
+        mazeOutput.add(fileButton);
         fileButton.setVisible(true);
-        selectOutputType.setVisible(true);
+
+
+        JTextArea lista = new JTextArea();
+        lista.setBackground(Color.WHITE);
+        lista.setForeground(Color.BLACK); //czcionka
+        lista.setEditable(false);
+        lista.setLineWrap(true);
+        for(int i=1; i<=15; i++)
+        {
+            lista.append("Oto " + i + " linijka tekstu.\n");
+        }
+
+        JScrollPane scroll = new JScrollPane(lista);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scroll.setBounds(50, 50, 300, 150);
+        mazeOutput.add(scroll);
+
+        lista.setVisible(true);
+        mazeOutput.setVisible(true);
+
+
+
     }
 
     private void dodajPrzyciskWybierzPlikTXT()
