@@ -1,6 +1,6 @@
-import com.formdev.flatlaf.*;
+import javax.swing.UIManager;
 
-import javax.swing.*;
+import com.formdev.flatlaf.*;
 
 
 public class Main {
