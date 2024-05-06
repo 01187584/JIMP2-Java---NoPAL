@@ -8,20 +8,28 @@ public final class Okno {
 
     public Okno(){
         GUI = new JFrame("OPAL");
-        GUI.setSize(1280,800);
+        GUI.setSize(1280,720);
         GUI.setLayout(null);
         GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GUI.setResizable(false);
         GUI.setLocationRelativeTo(null);
+        this.dodajWidokLabiryntu();
         this.dodajPrzyciski();
 
     }
 
+    private void dodajWidokLabiryntu()
+    {
+        JPanel widokLabiryntu = new JPanel();
+        widokLabiryntu.setBounds(252, 21, 976, 628);
+        widokLabiryntu.setBackground(Color.BLACK);
+        GUI.add(widokLabiryntu);
+    }
 
     private void dodajPrzyciskLista()
     {
         JButton oknoLista = new JButton("Pokaż listę kroków");
-        oknoLista.setBounds(26, 21,200,103 );
+        oknoLista.setBounds(26, 21,200,85 );
         GUI.add(oknoLista);
         oknoLista.addActionListener(_ -> zapisListy());
     }
@@ -35,7 +43,7 @@ public final class Okno {
         selectOutputType.setLayout(null);
         JButton fileButton = new JButton("Stwórz plik");
         selectOutputType.add(fileButton);
-        fileButton.setBounds(100,250, 200, 75);
+        fileButton.setBounds(100,250, 200, 250);
         fileButton.setVisible(true);
         selectOutputType.setVisible(true);
     }
@@ -43,7 +51,7 @@ public final class Okno {
     private void dodajPrzyciskWybierzPlikTXT()
     {
         JButton PrzyciskWybierzPlikTXT = new JButton("Wybierz plik tekstowy");
-        PrzyciskWybierzPlikTXT.setBounds(26, 145,200,103 );
+        PrzyciskWybierzPlikTXT.setBounds(26, 130,200,85 );
         PrzyciskWybierzPlikTXT.addActionListener(_ -> poleWyboru("txt"));
         GUI.add(PrzyciskWybierzPlikTXT);
     }
@@ -51,7 +59,7 @@ public final class Okno {
     private void dodajPrzyciskWybierzPlikBIN()
     {
         JButton PrzyciskWybierzPlikBIN = new JButton("Wybierz plik binarny");
-        PrzyciskWybierzPlikBIN.setBounds(26, 269,200,103 );
+        PrzyciskWybierzPlikBIN.setBounds(26, 239,200,85 );
         PrzyciskWybierzPlikBIN.addActionListener(_ -> poleWyboru("bin"));
         GUI.add(PrzyciskWybierzPlikBIN);
     }
@@ -75,21 +83,21 @@ public final class Okno {
     private void dodajPrzyciskWybierzWejscie()
     {
         JButton PrzyciskWybierzWejscie = new JButton("Wybierz wejście");
-        PrzyciskWybierzWejscie.setBounds(26, 393,200,103 );
+        PrzyciskWybierzWejscie.setBounds(26, 348,200,85 );
         GUI.add(PrzyciskWybierzWejscie);
     }
 
     private void dodajPrzyciskWybierzWyjscie()
     {
         JButton PrzyciskWybierzWyjscie = new JButton("Wybierz wyjście");
-        PrzyciskWybierzWyjscie.setBounds(26, 517,200,103 );
+        PrzyciskWybierzWyjscie.setBounds(26, 457,200,85 );
         GUI.add(PrzyciskWybierzWyjscie);
     }
 
     private void dodajPrzyciskRozwiaz()
     {
         JButton przyciskRozwiaz = new JButton("Rozwiąż");
-        przyciskRozwiaz.setBounds(26, 641,200,103 );
+        przyciskRozwiaz.setBounds(26, 566,200,85 );
         GUI.add(przyciskRozwiaz);
     }
 
