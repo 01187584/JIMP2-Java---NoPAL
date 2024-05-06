@@ -1,7 +1,9 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public final class Okno {
     private final JFrame GUI;
@@ -36,6 +38,7 @@ public final class Okno {
 
     private void zapisListy()
     {
+
         JDialog mazeOutput = new JDialog(GUI, "Lista kroków");
         mazeOutput.setSize(400,400);
         mazeOutput.setLocationRelativeTo(null);
@@ -46,7 +49,6 @@ public final class Okno {
         fileButton.setBounds(100,250, 200, 75);
         mazeOutput.add(fileButton);
         fileButton.setVisible(true);
-
 
         JTextArea lista = new JTextArea();
         lista.setBackground(Color.WHITE);
@@ -63,10 +65,13 @@ public final class Okno {
         scroll.setBounds(50, 50, 300, 150);
         mazeOutput.add(scroll);
 
+        fileButton.addActionListener(_ -> {
+            String tekst = lista.getText();
+            poleZapisu(tekst);
+        });
+
         lista.setVisible(true);
         mazeOutput.setVisible(true);
-
-
 
     }
 
@@ -101,6 +106,29 @@ public final class Okno {
             System.out.println("Brak");
         }
     }
+
+    //należy ręcznie wpisać nazwę pliku tekstowego
+
+    private void poleZapisu(String tekst)
+    {
+        JFileChooser zapis = new JFileChooser();
+        int r = zapis.showSaveDialog(GUI);
+        if (r == JFileChooser.APPROVE_OPTION)
+        {
+            String nazwaPliku = zapis.getSelectedFile().getAbsolutePath() + ".txt";
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(nazwaPliku));
+                writer.write(tekst);
+
+                writer.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    //te guziki jeszcze nie są zaimplementowane
 
     private void dodajPrzyciskWybierzWejscie()
     {
