@@ -23,9 +23,7 @@ public final class Okno {
         JButton oknoLista = new JButton("Pokaż listę kroków");
         oknoLista.setBounds(26, 21,200,103 );
         GUI.add(oknoLista);
-        oknoLista.addActionListener(_ -> {
-            zapisListy();
-        });
+        oknoLista.addActionListener(_ -> zapisListy());
     }
 
     private void zapisListy()
@@ -34,11 +32,10 @@ public final class Okno {
         selectOutputType.setSize(400,400);
         selectOutputType.setLocationRelativeTo(null);
         selectOutputType.setResizable(false);
-        selectOutputType.setLayout(new FlowLayout(FlowLayout.CENTER));
+        selectOutputType.setLayout(null);
         JButton fileButton = new JButton("Stwórz plik");
         selectOutputType.add(fileButton);
-        //chcę zrobić guzik do utworzenia pliku tekstowego na dole i listę na "środnku
-        //ale na razie są problemy,
+        fileButton.setBounds(100,250, 200, 75);
         fileButton.setVisible(true);
         selectOutputType.setVisible(true);
     }
@@ -47,52 +44,33 @@ public final class Okno {
     {
         JButton PrzyciskWybierzPlikTXT = new JButton("Wybierz plik tekstowy");
         PrzyciskWybierzPlikTXT.setBounds(26, 145,200,103 );
-        PrzyciskWybierzPlikTXT.addActionListener(_ -> poleWyboruTXT());
+        PrzyciskWybierzPlikTXT.addActionListener(_ -> poleWyboru("txt"));
         GUI.add(PrzyciskWybierzPlikTXT);
-    }
-
-    private void poleWyboruTXT()
-    {
-        JFileChooser wyborTXT = new JFileChooser(FileSystemView.getFileSystemView());
-        FileNameExtensionFilter typ = new FileNameExtensionFilter("Pliki tekstowe", "txt");
-        wyborTXT.setFileFilter(typ);
-        int r = wyborTXT.showOpenDialog(GUI);
-        if (r == JFileChooser.APPROVE_OPTION)
-        {
-            System.out.println(wyborTXT.getSelectedFile().getAbsolutePath());
-        }
-        else
-        {
-            System.out.println("Brak");
-        }
-
     }
 
     private void dodajPrzyciskWybierzPlikBIN()
     {
         JButton PrzyciskWybierzPlikBIN = new JButton("Wybierz plik binarny");
         PrzyciskWybierzPlikBIN.setBounds(26, 269,200,103 );
-        PrzyciskWybierzPlikBIN.addActionListener(_ -> poleWyboruBIN());
+        PrzyciskWybierzPlikBIN.addActionListener(_ -> poleWyboru("bin"));
         GUI.add(PrzyciskWybierzPlikBIN);
     }
 
-    private void poleWyboruBIN()
+    private void poleWyboru(String rozszerzenie)
     {
-        JFileChooser wyborBIN = new JFileChooser();
-        FileNameExtensionFilter typ = new FileNameExtensionFilter("Pliki binarne", "bin");
-        wyborBIN.setFileFilter(typ);
-        int r = wyborBIN.showOpenDialog(GUI);
+        JFileChooser wybor = new JFileChooser();
+        FileNameExtensionFilter typ = new FileNameExtensionFilter("Pliki o rozszerzeniu " + rozszerzenie, rozszerzenie);
+        wybor.setFileFilter(typ);
+        int r = wybor.showOpenDialog(GUI);
         if (r == JFileChooser.APPROVE_OPTION)
         {
-            System.out.println(wyborBIN.getSelectedFile().getAbsolutePath());
+            System.out.println(wybor.getSelectedFile().getAbsolutePath());
         }
         else
         {
             System.out.println("Brak");
         }
     }
-
-
 
     private void dodajPrzyciskWybierzWejscie()
     {
