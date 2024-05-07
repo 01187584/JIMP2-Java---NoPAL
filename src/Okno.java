@@ -31,9 +31,30 @@ public final class Okno {
         GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //GUI.setResizable(false);
         GUI.setLocationRelativeTo(null);
-        this.dodajWidokLabiryntu();
+        tenPanel = new JPanel();
+        GUI.setLayout(new BorderLayout());
+        this.dodajPodgladLabiryntu();
+        //GUI.add(ScrollPL);
+        //GUI.add(ScrollPL, BorderLayout.CENTER);
+        FlowLayout layout = new FlowLayout();
+        layout.setHgap(10);              
+        layout.setVgap(10);
+        tenPanel.setLayout(layout);
+        tenPanel.setPreferredSize(new Dimension(stdRozmPrzycisku.width+10,820));
+        this.dodajPrzyciski();
+        GUI.add(tenPanel, BorderLayout.WEST);
+        GUI.pack();
+    }
+
+    private void dodajPodgladLabiryntu()
+    {
+        /*JPanel widokLabiryntu = new JPanel();
+        widokLabiryntu.setBounds(252, 21, 976, 628);
+        widokLabiryntu.setBackground(Color.BLACK);
+        GUI.add(widokLabiryntu);
+        */
         //PL = new PodgladLabiryntu(26+200, 21, 1280-26-200, 820-21, 10, 10);
-        PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, 1000, 1000);
+        PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, 100, 100);
         //PL = new PodgladLabiryntu(0, 0, 1023, 754, 10, 10);
         GUI.addComponentListener(new ComponentAdapter() {
             @Override
@@ -44,24 +65,7 @@ public final class Okno {
         });
         JScrollPane ScrollPL = new JScrollPane(PL);
         PL.setSize(1280-26-200,820-21);
-        //GUI.add(ScrollPL);
-        tenPanel = new JPanel();
-        GUI.setLayout(new BorderLayout());
-        FlowLayout layout = new FlowLayout();
-        layout.setHgap(10);              
-        layout.setVgap(10);
-        tenPanel.setLayout(layout);
-        tenPanel.setPreferredSize(new Dimension(stdRozmPrzycisku.width+10,820));
-        this.dodajPrzyciski();
-
-    }
-
-    private void dodajWidokLabiryntu()
-    {
-        JPanel widokLabiryntu = new JPanel();
-        widokLabiryntu.setBounds(252, 21, 976, 628);
-        widokLabiryntu.setBackground(Color.BLACK);
-        GUI.add(widokLabiryntu);
+        GUI.add(ScrollPL, BorderLayout.CENTER);
     }
 
     private void dodajPrzyciskLista()
@@ -70,13 +74,13 @@ public final class Okno {
         //oknoLista.setBounds(26, 21,200,85 );
         oknoLista.setPreferredSize(stdRozmPrzycisku);
         //GUI.add(oknoLista);
-        tenPanel.add(oknoLista);
         oknoLista.addActionListener(l -> zapisListy());
+        tenPanel.add(oknoLista);
     }
 
     private void zapisListy()
     {
-
+        //System.out.println("TU JESTEM");
         JDialog mazeOutput = new JDialog(GUI, "Lista kroków");
         mazeOutput.setSize(400,400);
         mazeOutput.setLocationRelativeTo(null);
@@ -103,7 +107,7 @@ public final class Okno {
         scroll.setBounds(50, 50, 300, 150);
         mazeOutput.add(scroll);
 
-        fileButton.addActionListener(_ -> {
+        fileButton.addActionListener(l -> {
             String tekst = lista.getText();
             poleZapisu(tekst);
         });
@@ -118,7 +122,7 @@ public final class Okno {
         JButton PrzyciskWybierzPlikTXT = new JButton("Wybierz plik tekstowy");
         //PrzyciskWybierzPlikTXT.setBounds(26, 130,200,85 );
         PrzyciskWybierzPlikTXT.setPreferredSize(stdRozmPrzycisku);
-        PrzyciskWybierzPlikTXT.addActionListener(l -> poleWyboruTXT("txt"));
+        PrzyciskWybierzPlikTXT.addActionListener(l -> poleWyboru("txt"));
         //GUI.add(PrzyciskWybierzPlikTXT);
         tenPanel.add(PrzyciskWybierzPlikTXT);
     }
@@ -128,7 +132,7 @@ public final class Okno {
         JButton PrzyciskWybierzPlikBIN = new JButton("Wybierz plik binarny");
         //PrzyciskWybierzPlikBIN.setBounds(26, 239,200,85 );
         PrzyciskWybierzPlikBIN.setPreferredSize(stdRozmPrzycisku);
-        PrzyciskWybierzPlikBIN.addActionListener(l -> poleWyboruBIN("bin"));
+        PrzyciskWybierzPlikBIN.addActionListener(l -> poleWyboru("bin"));
         //GUI.add(PrzyciskWybierzPlikBIN);
         tenPanel.add(PrzyciskWybierzPlikBIN);
     }
