@@ -18,7 +18,7 @@ public class PodgladLabiryntu extends JPanel{
     private int maxwidth, maxheight;
     private Graphics G;
     private int[] tempintarr = new int[2];
-    public boolean selectingEntrance = true;
+    //public boolean selectingEntrance = true; Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM
 
     private int[][] _tempmazetest; // _tempmazetest[kolumna][wiersz] = rodzajPola
 
@@ -51,9 +51,10 @@ public class PodgladLabiryntu extends JPanel{
                     int column, row;
                     column = tempintarr[0];row = tempintarr[1];
                     System.out.printf("CoordsToNums: (%d, %d)\n", column, row);
-                    if (selectingEntrance) {
+                    //if (selectingEntrance) {
+                    if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
                         if (_tempmazetest[column][row] == 3) _tempSetRandomField(column, row);
-                    else _tempmazetest[column][row] = 3; // ustawiamy na zielony
+                        else _tempmazetest[column][row] = 3; // ustawiamy na zielony
                     } else {
                         if (_tempmazetest[column][row] == 2) _tempSetRandomField(column, row);
                         else _tempmazetest[column][row] = 2; // ustawiamy na czerwony
