@@ -16,12 +16,16 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import maze.Maze;
+
 public final class Okno {
+    private final Maze M;
     private final JFrame GUI;
     private final JPanel tenPanel;
     private final Dimension stdRozmPrzycisku = new Dimension(230, 116);
     private PodgladLabiryntu PL;
     public Okno() {
+        this.M = new Maze(30,30);
         GUI = new JFrame("WyPAL"); // Wydajny Program Analizujący Labirynt
         //GUI.setSize(1280,720);
         GUI.setPreferredSize(new Dimension(1280,820));
@@ -54,7 +58,8 @@ public final class Okno {
         GUI.add(widokLabiryntu);
         */
         //PL = new PodgladLabiryntu(26+200, 21, 1280-26-200, 820-21, 10, 10);
-        PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, 100, 100);
+        //PL = new PodgladLabiryntu(0, 5, 1260-1-stdRozmPrzycisku.width, 761-1, 150, 50);
+        PL = new PodgladLabiryntu(0, 5, 1260-1-stdRozmPrzycisku.width, 761-1, M);
         //PL = new PodgladLabiryntu(0, 0, 1023, 754, 10, 10);
         GUI.addComponentListener(new ComponentAdapter() {
             @Override
@@ -187,7 +192,7 @@ public final class Okno {
     }
 
     private void WybierzWejscie() {
-        PL.selectingEntrance = true;
+        //PL.selectingEntrance = true; Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM
     }
 
     private void dodajPrzyciskWybierzWyjscie()
@@ -201,7 +206,7 @@ public final class Okno {
     }
 
     private void WybierzWyjscie() {
-        PL.selectingEntrance = false;
+        //PL.selectingEntrance = false; Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM
     }
 
     private void dodajPrzyciskRozwiaz()
@@ -216,8 +221,9 @@ public final class Okno {
     private void dodajPrzyciski()
     {
         this.dodajPrzyciskRozwiaz();
-        this.dodajPrzyciskWybierzWyjscie();
-        this.dodajPrzyciskWybierzWejscie();
+        //Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM:
+        //this.dodajPrzyciskWybierzWyjscie();
+        //this.dodajPrzyciskWybierzWejscie();
         this.dodajPrzyciskWybierzPlikBIN();
         this.dodajPrzyciskWybierzPlikTXT();
         this.dodajPrzyciskLista();

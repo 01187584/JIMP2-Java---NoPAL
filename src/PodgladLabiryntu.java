@@ -9,18 +9,22 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
+import maze.Field;
+import maze.Maze;
+
 public class PodgladLabiryntu extends JPanel{
-    private Random rand;
+    //private Random rand;
     private int start_x, start_y;
     private int centering_start_x, centering_start_y;
-    private int cols, rows;
+    private final Maze M;
+    //private int cols, rows;
     private int sizeofone;
     private int maxwidth, maxheight;
     private Graphics G;
     private int[] tempintarr = new int[2];
     //public boolean selectingEntrance = true; Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM
 
-    private int[][] _tempmazetest; // _tempmazetest[kolumna][wiersz] = rodzajPola
+    //private int[][] _tempmazetest; // _tempmazetest[kolumna][wiersz] = rodzajPola
 
     public final boolean shouldFixCoords = false; // Czy automatycznie poprawia podane wymiary (maxwidth, maxheight)
     // oraz współrzędne kliknięte myszką o (-22, -56), aby dobrze się wyświetlało i klikało
@@ -32,9 +36,12 @@ public class PodgladLabiryntu extends JPanel{
     //private boolean hasCanvasChanged = true;
     //private List<Point> points = new ArrayList<>();
     
-    public PodgladLabiryntu(int start_x, int start_y, int maxwidth, int maxheight, int cols, int rows) {
-        this.rand = new Random();
-        this.cols = cols;this.rows = rows;
+    //public PodgladLabiryntu(int start_x, int start_y, int maxwidth, int maxheight, int cols, int rows) {
+    public PodgladLabiryntu(int start_x, int start_y, int maxwidth, int maxheight, Maze M) {
+        // Maze M powinien być wcześniej zainicjowany
+        this.M = M;
+        //this.rand = new Random();
+        //this.cols = cols;this.rows = rows;
         setMaxDimensions(maxwidth, maxheight);
         setStartCoords(start_x, start_y);
         _tempFillRandomMaze();
@@ -53,11 +60,11 @@ public class PodgladLabiryntu extends JPanel{
                     System.out.printf("CoordsToNums: (%d, %d)\n", column, row);
                     //if (selectingEntrance) {
                     if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-                        if (_tempmazetest[column][row] == 3) _tempSetRandomField(column, row);
-                        else _tempmazetest[column][row] = 3; // ustawiamy na zielony
+                        if (M.getField(column, row).isEntranceField()) _tempSetRandomField(column, row);
+                        else M.getField(column, row).type = Field.ENTRANCE_FIELD; // ustawiamy na zielony
                     } else {
-                        if (_tempmazetest[column][row] == 2) _tempSetRandomField(column, row);
-                        else _tempmazetest[column][row] = 2; // ustawiamy na czerwony
+                        if (M.getField(column, row).isExitField()) _tempSetRandomField(column, row);
+                        else M.getField(column, row).type = Field.EXIT_FIELD; // ustawiamy na czerwony
                     }
                     
                     NumsToCoords(column, row);
@@ -69,10 +76,10 @@ public class PodgladLabiryntu extends JPanel{
     }
     private void updateCentering() {
         if (enableCentering) {
-            if (maxwidth / cols < minSize) centering_start_x = start_x;
-            else centering_start_x = start_x+((this.maxwidth-(sizeofone*cols))/2);
-            if (maxheight / rows < minSize) centering_start_y = start_y;
-            else centering_start_y = start_y+((this.maxheight-(sizeofone*rows))/2);
+            if (maxwidth / M.getCols() < minSize) centering_start_x = start_x;
+            else centering_start_x = start_x+((this.maxwidth-(sizeofone*M.getCols()))/2);
+            if (maxheight / M.getRows() < minSize) centering_start_y = start_y;
+            else centering_start_y = start_y+((this.maxheight-(sizeofone*M.getRows()))/2);
         } else {
             centering_start_x = start_x;
             centering_start_y = start_y;
@@ -100,11 +107,11 @@ public class PodgladLabiryntu extends JPanel{
             maxwidth = tempintarr[0];maxheight = tempintarr[1];
         }
         this.maxwidth = maxwidth;this.maxheight = maxheight;
-        this.sizeofone = Integer.min(maxwidth / cols, maxheight / rows);
+        this.sizeofone = Integer.min(maxwidth / M.getCols(), maxheight / M.getRows());
         if (this.sizeofone < minSize) this.sizeofone = minSize;
         // Trzeba zawsze aktualizować (centering_start_x, centering_start_y) przy zmianie wspołrzędnych początkowych lub wymiarów
         updateCentering();
-        setPreferredSize(new Dimension(centering_start_x+sizeofone*cols, centering_start_y+sizeofone*rows));
+        setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols(), centering_start_y+sizeofone*M.getRows()));
     }
     @Override
     public void paintComponent(Graphics g) {
@@ -131,21 +138,21 @@ public class PodgladLabiryntu extends JPanel{
         */
         // Losowy (zdegenerowany) labirynt z możliwością kliknięcia, aby zmienić kolor Pola na czerwony (w celu testowania)
         int x, y;
-        for (int r = 0;r < rows;r++) {
-            for (int c = 0;c < cols;c++) {
+        for (int r = 1;r <= M.getRows();r++) {
+            for (int c = 1;c <= M.getCols();c++) {
                 NumsToCoords(c, r);
                 x = tempintarr[0];y = tempintarr[1];
-                switch (_tempmazetest[c][r]) {
-                    case 0:
+                switch (M.getField(c, r).type) {
+                    case Field.WHITE_FIELD:
                         drawWhite(x, y);
                         break;
-                    case 1:
+                    case Field.BLACK_FIELD:
                         drawBlack(x, y);
                         break;
-                    case 2:
+                    case Field.EXIT_FIELD:
                         drawRed(x, y);
                         break;
-                    case 3:
+                    case Field.ENTRANCE_FIELD:
                         drawGreen(x, y);
                         break;
                     default:
@@ -155,13 +162,13 @@ public class PodgladLabiryntu extends JPanel{
         }
         //hasCanvasChanged = false;
     }
-    private int randrange(int min, int max) {
+    /*private int randrange(int min, int max) {
         return rand.nextInt(max - min + 1) + min;
     }
     public void drawRandom(int x, int y) {
         if (randrange(0, 1) > 0) drawWhite(x, y);
         else drawBlack(x, y);
-    }
+    }*/
     public void drawWhite(int x, int y) {
         //hasCanvasChanged = true;
         //System.out.println("TRUE 1");
@@ -200,16 +207,19 @@ public class PodgladLabiryntu extends JPanel{
         }
         return tempintarr;
     }
-    private void _tempSetRandomField(int column, int row) {
+    /*private void _tempSetRandomField(int column, int row) {
         //hasCanvasChanged = true;
         //System.out.println("TRUE 4");
         if (randrange(0, 1) > 0) _tempmazetest[column][row] = 0;
         else _tempmazetest[column][row] = 1;
+    }*/
+    private void _tempSetRandomField(int column, int row) {
+        M.getField(column,row).setRandom();
     }
     private void _tempFillRandomMaze() {
-        _tempmazetest = new int[cols][rows];
-        for (int r = 0;r < rows;r++) {
-            for (int c = 0;c < cols;c++) {
+        //_tempmazetest = new int[cols][rows];
+        for (int r = 1;r <= M.getRows();r++) {
+            for (int c = 1;c <= M.getCols();c++) {
                 _tempSetRandomField(c, r);
             }
         }
@@ -226,7 +236,7 @@ public class PodgladLabiryntu extends JPanel{
         if (tempintarr[0] < 0 || tempintarr[1] < 0) return null;
         System.out.printf("fixedcoords: (%d, %d)\n", tempintarr[0], tempintarr[0]);
         tempintarr[0] /= sizeofone; tempintarr[1] /= sizeofone;
-        if (tempintarr[0] >= cols || tempintarr[1] >= rows) return null;
+        if (tempintarr[0] >= M.getCols() || tempintarr[1] >= M.getRows()) return null;
         return tempintarr;
         //return {};
         //return x/sizeofone;
@@ -246,7 +256,9 @@ public class PodgladLabiryntu extends JPanel{
         start_x = 0;start_y = 0;
         maxwidth = frame.getBounds().width-start_x;maxheight = frame.getBounds().height-start_y;
         //CustomCanvas C = new CustomCanvas(0,0,frame.getBounds().width,frame.getBounds().height,15,20);
-        PodgladLabiryntu C = new PodgladLabiryntu(start_x,start_y,maxwidth,maxheight,100,100);
+        //PodgladLabiryntu C = new PodgladLabiryntu(start_x,start_y,maxwidth,maxheight,100,100);
+        Maze M = new Maze(100, 100);
+        PodgladLabiryntu C = new PodgladLabiryntu(start_x,start_y,maxwidth,maxheight,M);
         //frame.add(C);
         frame.addComponentListener(new ComponentAdapter() {
             @Override

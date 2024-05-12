@@ -1,26 +1,63 @@
 package graph;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 // W tej implementacji nie można dodawać 2 takich samych krawędzi (z tego samego wierzchołka początkowego i końcowego)
-public class TypicalUndirectedGraph<GraphVertex extends AbstractVertex, GraphEdge extends AbstractEdge<GraphVertex>> extends AbstractGraph<GraphVertex, GraphEdge, HashSet<GraphVertex>> {
-    private final static boolean FastEquals = true; // Nie sprawdzamy, czy da się przerzucić obiekt na odpowiedni typ
+public class TypicalUndirectedGraph<GraphVertex extends Vertex, GraphEdge extends Edge<GraphVertex>> extends AbstractGraph<GraphVertex, GraphEdge, HashSet<GraphVertex>> {
+    private final static boolean checkCorrectUse = true; // Nie sprawdzamy, czy da się przerzucić obiekt na odpowiedni typ oraz czy wrzucamy wierzchołki o odpowiednim numerze
     private final int id;
     private static int last_id = 0;
+    private HashMap<GraphVertex, HashSet<GraphEdge>> AdjListEdge = new HashMap<GraphVertex, HashSet<GraphEdge>>();
 
-    public TypicalUndirectedGraph() {
+    // Trzeba tu określić jaki rodzaj wierzchołka i krawędzi chcemy użyć, np:
+    // GraphVertexClass to np. Vertex.class
+    // GraphEdgeClass to np. (Class<Edge<Vertex>>)(Class<?>)Edge.class    (tak, wiem, to obrzydliwe)
+    public TypicalUndirectedGraph(Class<GraphVertex> GraphVertexClass, Class<GraphEdge> GraphEdgeClass) {
+        super(GraphVertexClass, GraphEdgeClass);
         //V.add(null); // Aby liczyć wierzchołki od 1
         last_id++;
         id = last_id;
         //Graphs.add(this);
     }
+    /*public void test() {
+        System.out.println(getClass());
+        System.out.println(getClass().getGenericSuperclass());
+        System.out.println((ParameterizedType)(getClass().getGenericSuperclass()));
+        System.out.println(((ParameterizedType)(getClass().getGenericSuperclass())).getActualTypeArguments()[0]);
+        Class<GraphVertex> test = (Class<GraphVertex>)(((ParameterizedType)(getClass().getGenericSuperclass())).getActualTypeArguments()[0]);
+        System.out.println(test);
+    }*/
     public void addVertex(GraphVertex V) {
-        this.V.add(V);
+        if (checkCorrectUse && V.getNum() != lastVertexNum+1) throw new IllegalArgumentException("Numer wierzchołka dodawanego do grafu powinien być o 1 większy niż "+String.valueOf(lastVertexNum)+" a nie "+String.valueOf(V.getNum()));
+        lastVertexNum = V.getNum();
+        this.V.put((Integer)V.getNum(),V);
         HashSet<GraphVertex> HS = new HashSet<GraphVertex>(1); // Nie wiemy jak wiele może być krawędzi
         AdjacencyList.put(V, HS);
+        AdjListEdge.put(V, new HashSet<GraphEdge>(1));
+    }
+    public GraphVertex addVertex() {
+        GraphVertex V;
+        try {
+            V = GraphVertexClass.newInstance(); // dzięki Javie nie możemy użyć po prostu "new GraphVertex(lastVertexNum)"
+            V.pseudoconstructor(lastVertexNum+1);
+        } catch (Exception e) {
+            System.out.println("Coś jest bardzo nie tak.");
+            e.printStackTrace();
+            return null;
+        }
+        addVertex(V);
+        return V;
+    }
+    public void addVertices(int numVertices) {
+        for (int i = 0;i < numVertices;i++) {
+            addVertex();
+        }
     }
     public GraphVertex getVertex(int numVertex) {
-        return V.get(numVertex-1);
+        //System.out.printf("AAA: %d\n",numVertex);
+        //System.out.println(V.get(numVertex));
+        return V.get(numVertex);
     }
     public void addEdge(GraphEdge E) {
         this.E.add(E);
@@ -40,21 +77,55 @@ public class TypicalUndirectedGraph<GraphVertex extends AbstractVertex, GraphEdg
             AdjacencyList.put(E.end, HS);
         }*/
         AdjacencyList.get(E.end).add(E.start);
+        AdjListEdge.get(E.start).add(E);
+        AdjListEdge.get(E.end).add(E);
+    }
+    public void addEdge(int numV1, int numV2) {
+        addEdge(getVertex(numV1), getVertex(numV2));
+    }
+    public void addEdge(GraphVertex V1, GraphVertex V2) {
+        GraphEdge E;
+        try {
+            E = GraphEdgeClass.newInstance();
+            E.pseudoconstructor(V1, V2);
+            // dzięki Javie nie możemy użyć po prostu "new GraphEdge(V1, V2)"
+        } catch (Exception e) {
+            System.err.println("Coś jest bardzo nie tak.");
+            e.printStackTrace();
+            E = null;
+        }
+        addEdge(E);
     }
     public void removeVertex(GraphVertex V) {
-        throw new UnsupportedOperationException("Jeszcze nie zaimplementowane!!!");
+        this.V.remove(V.getNum());
+        HashSet<GraphEdge> HS = AdjListEdge.get(V);
+        for (GraphEdge Edg : HS) {
+            removeEdge(Edg);
+            HS.remove(Edg);
+        }
+        AdjListEdge.remove(V);
+        startV.remove(V);endV.remove(V); // Jeśli nie ma, to nic się nie stanie\
     }
     public void removeEdge(GraphEdge E) {
-        throw new UnsupportedOperationException("Jeszcze nie zaimplementowane!!!");
+        // To powinno działać w miarę szybko w tej implementacji dzięki temu, że
+        // AdjacencyListCollection to HashSet<GraphVertex>
+        if (E.start == null) return;
+        this.E.remove(E);
+        AdjacencyList.get(E.start).remove(E.end);
+        AdjacencyList.get(E.end).remove(E.start);
+        E.remove();
     }
     public void destroy() {
-        throw new UnsupportedOperationException("Jeszcze nie zaimplementowane!!!");
+        HashSet<Integer> KSet = new HashSet<Integer>(V.keySet());
+        for (Integer VerNum : KSet) {
+            removeVertex(V.get(VerNum));
+        }
     }
     public HashSet<GraphVertex> getAdjacent(GraphVertex V) {
         return AdjacencyList.get(V);
     }
     public boolean equals(Object o) {
-        if (FastEquals) {
+        if (!checkCorrectUse) {
             if (((TypicalUndirectedGraph<GraphVertex, GraphEdge>)o).id != id) return false;
             return true;
         }
@@ -72,8 +143,8 @@ public class TypicalUndirectedGraph<GraphVertex extends AbstractVertex, GraphEdg
     public String toString() {
         String s = new String();
         s += "V: {";
-        for (GraphVertex Ver : V) {
-            s += Ver.toString();
+        for (Integer VerNum : V.keySet()) {
+            s += V.get(VerNum).toString();
             s += ',';
         }
         s += "}\nE: {";
@@ -87,5 +158,17 @@ public class TypicalUndirectedGraph<GraphVertex extends AbstractVertex, GraphEdg
         }
         s += "]";
         return s;
+    }
+    public HashMap<Integer, GraphVertex> getV() {
+        return V;
+    }
+    public HashSet<GraphEdge> getE() {
+        return E;
+    }
+    public HashSet<GraphVertex> getStartV() {
+        return startV;
+    }
+    public HashSet<GraphVertex> getEndV() {
+        return endV;
     }
 }
