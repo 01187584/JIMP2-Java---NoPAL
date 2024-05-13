@@ -22,14 +22,14 @@ public final class Okno {
     private final Maze M;
     private final JFrame GUI;
     private final JPanel tenPanel;
-    private final Dimension stdRozmPrzycisku = new Dimension(230, 116);
+    private final Dimension stdRozmPrzycisku = new Dimension(230, 120);
     private PodgladLabiryntu PL;
     public Okno() {
         this.M = new Maze(30,30);
         GUI = new JFrame("WyPAL"); // Wydajny Program Analizujący Labirynt
         //GUI.setSize(1280,720);
-        GUI.setPreferredSize(new Dimension(1280,820));
-        GUI.setMinimumSize(new Dimension(820,820)); // Aby przyciski się zawsze mieściły
+        GUI.setPreferredSize(new Dimension(1280,514+170));
+        GUI.setMinimumSize(new Dimension(820,514+170));// Aby przyciski się zawsze mieściły
         //GUI.setPreferredSize(new Dimension(1280,800));
         //GUI.setLayout(null);
         GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,10 +41,18 @@ public final class Okno {
         //GUI.add(ScrollPL);
         //GUI.add(ScrollPL, BorderLayout.CENTER);
         FlowLayout layout = new FlowLayout();
-        layout.setHgap(10);              
+        layout.setHgap(10);
         layout.setVgap(10);
         tenPanel.setLayout(layout);
-        tenPanel.setPreferredSize(new Dimension(stdRozmPrzycisku.width+10,820));
+        GUI.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Dimension size = GUI.getSize();
+                layout.setVgap((size.height-516)/5);
+                tenPanel.revalidate();
+            }
+        });
+        tenPanel.setPreferredSize(new Dimension(stdRozmPrzycisku.width+10,820)); //height nie wpływa na nic
         this.dodajPrzyciski();
         GUI.add(tenPanel, BorderLayout.WEST);
         GUI.pack();
@@ -157,9 +165,6 @@ public final class Okno {
             System.out.println("Brak");
         }
     }
-
-    //należy ręcznie wpisać nazwę pliku tekstowego
-
     private void poleZapisu(String tekst)
     {
         JFileChooser zapis = new JFileChooser();
@@ -178,8 +183,6 @@ public final class Okno {
         }
     }
 
-
-    //te guziki jeszcze nie są zaimplementowane
 
     private void dodajPrzyciskWybierzWejscie()
     {
