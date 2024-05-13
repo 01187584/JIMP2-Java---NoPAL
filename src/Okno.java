@@ -4,6 +4,9 @@ import java.awt.*;
 
 import java.io.File;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 //import java.util.concurrent.TimeUnit;
 import java.awt.event.*;
@@ -213,14 +216,17 @@ public final class Okno {
 
     private void dodajKomunikaty()
     {
-        JButton komunikaty = new JButton("Pole na komunikaty");
-        komunikaty.setBackground(Color.WHITE);
-        komunikaty.setForeground(Color.BLACK); //czcionka
+        JTextPane komunikaty = new JTextPane();
+        komunikaty.setBackground(new Color(60,63,65));
+        komunikaty.setForeground(Color.WHITE); //czcionka
         komunikaty.setFont(new Font("Helvetica", Font.BOLD, 16));
-       // komunikaty.setEditable(false);
-       // komunikaty.setLineWrap(true);
+        StyledDocument doc = komunikaty.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+        komunikaty.setText("Pole na komunikaty.");
+        komunikaty.setEditable(false);
         komunikaty.setPreferredSize(stdRozmPrzycisku);
-        //komunikaty.setVisible(true);
         tenPanel.add(komunikaty);
 
     }
