@@ -16,7 +16,7 @@ public class PodgladLabiryntu extends JPanel{
     //private Random rand;
     private int start_x, start_y;
     private int centering_start_x, centering_start_y;
-    private final Maze M;
+    public Maze M;
     //private int cols, rows;
     private int sizeofone;
     private int maxwidth, maxheight;
@@ -30,7 +30,7 @@ public class PodgladLabiryntu extends JPanel{
     public final boolean shouldFixCoords = false; // Czy automatycznie poprawia podane wymiary (maxwidth, maxheight)
     // oraz współrzędne kliknięte myszką o (-22, -56), aby dobrze się wyświetlało i klikało
     public final boolean shouldFixFlatLaf = false; // Jak powyżej dla FlatLafa, niezależne od powyższego    
-    private final boolean enableCentering = false;
+    private final boolean enableCentering = true;
     private final int minSize = 10;
     //private BufferedImage bImage;
     //private JLabel imageLabel;
@@ -112,7 +112,8 @@ public class PodgladLabiryntu extends JPanel{
         if (this.sizeofone < minSize) this.sizeofone = minSize;
         // Trzeba zawsze aktualizować (centering_start_x, centering_start_y) przy zmianie wspołrzędnych początkowych lub wymiarów
         updateCentering();
-        setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols(), centering_start_y+sizeofone*M.getRows()));
+        //setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols(), centering_start_y+sizeofone*M.getRows()));
+        setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols()+11, centering_start_y+sizeofone*M.getRows()+11)); // ?! Czy to przez ten ScrollPAIN?
     }
     @Override
     public void paintComponent(Graphics g) {
@@ -197,14 +198,16 @@ public class PodgladLabiryntu extends JPanel{
     private int[] fixCoords(int x, int y) {
         tempintarr[0] = x;tempintarr[1] = y;
         if (shouldFixCoords) {
-            tempintarr[0] -= 22;tempintarr[1] -= 56;
+            //tempintarr[0] -= 22;tempintarr[1] -= 56;
+            tempintarr[0] -= 202;tempintarr[1] -= 56;
         }
         return tempintarr;
     }
     private int[] fixFlatLaf(int x, int y) {
         tempintarr[0] = x;tempintarr[1] = y;
         if (shouldFixFlatLaf) {
-            tempintarr[0] -= 22;tempintarr[1] -= 7;
+            //tempintarr[0] -= 22;tempintarr[1] -= 7;
+            tempintarr[0] -= 220;tempintarr[1] -= 7;
         }
         return tempintarr;
     }

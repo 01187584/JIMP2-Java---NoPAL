@@ -32,7 +32,7 @@ public final class Okno {
     public Okno() {
         //this.M = new Maze(30,30);
         MazeReader Reader = new TextMazeReader();
-        Reader.open("maze-big.txt");
+        Reader.open("maze-test.txt");
         M = null;
         if (Reader.validateFormat()) {
             M = Reader.read();
@@ -82,18 +82,26 @@ public final class Okno {
         */
         //PL = new PodgladLabiryntu(26+200, 21, 1280-26-200, 820-21, 10, 10);
         //PL = new PodgladLabiryntu(0, 5, 1260-1-stdRozmPrzycisku.width, 761-1, 150, 50);
-        PL = new PodgladLabiryntu(0, 5, 1260-1-stdRozmPrzycisku.width, 761-1, M);
+        
+        // Gdzieś jest POMYŁKA o 10 pikseli w wysokości i szerokości:
+
+        PL = new PodgladLabiryntu(0-10, 0-10, 1260-1-stdRozmPrzycisku.width, 761-1, M);
         //PL = new PodgladLabiryntu(0, 0, 1023, 754, 10, 10);
         GUI.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 //System.out.printf("(%d, %d)\n",GUI.getBounds().width,GUI.getBounds().height);
-                PL.setMaxDimensions(GUI.getBounds().width-21-stdRozmPrzycisku.width,GUI.getBounds().height-60);
+                zaktualizujRozmiarPodgladuLabiryntu();
             }
         });
         JScrollPane ScrollPL = new JScrollPane(PL);
-        PL.setSize(1280-26-200,820-21);
+        //PL.setSize(1280-26-200,820-21);
+        //PL.setSize(1054-500,799);
         GUI.add(ScrollPL, BorderLayout.CENTER);
+    }
+
+    private void zaktualizujRozmiarPodgladuLabiryntu() {
+        PL.setMaxDimensions(GUI.getBounds().width-21-stdRozmPrzycisku.width,GUI.getBounds().height-60);
     }
 
     private void dodajPrzyciskLista()
@@ -163,6 +171,15 @@ public final class Okno {
         if (r == JFileChooser.APPROVE_OPTION)
         {
             System.out.println(wybor.getSelectedFile().getAbsolutePath());
+            MazeReader Reader = new TextMazeReader();
+            Reader.open(wybor.getSelectedFile().getAbsolutePath());
+            if (Reader.validateFormat()) {
+                M = Reader.read();
+                PL.M = M;
+                zaktualizujRozmiarPodgladuLabiryntu();
+                PL.repaint();
+            }
+            Reader.close();
         }
         else
         {
