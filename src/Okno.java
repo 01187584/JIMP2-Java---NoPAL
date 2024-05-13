@@ -28,8 +28,8 @@ public final class Okno {
         this.M = new Maze(30,30);
         GUI = new JFrame("WyPAL"); // Wydajny Program Analizujący Labirynt
         //GUI.setSize(1280,720);
-        GUI.setPreferredSize(new Dimension(1280,514+170));
-        GUI.setMinimumSize(new Dimension(820,514+170));// Aby przyciski się zawsze mieściły
+        GUI.setPreferredSize(new Dimension(1280,360+170));
+        GUI.setMinimumSize(new Dimension(820,520+180));// Aby przyciski się zawsze mieściły
         //GUI.setPreferredSize(new Dimension(1280,800));
         //GUI.setLayout(null);
         GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,7 +48,7 @@ public final class Okno {
             @Override
             public void componentResized(ComponentEvent e) {
                 Dimension size = GUI.getSize();
-                layout.setVgap((size.height-516)/5);
+                layout.setVgap((size.height-520)/5);
                 tenPanel.revalidate();
             }
         });
@@ -130,30 +130,19 @@ public final class Okno {
 
     }
 
-    private void dodajPrzyciskWybierzPlikTXT()
+    private void dodajPrzyciskWybierzPlik()
     {
-        JButton PrzyciskWybierzPlikTXT = new JButton("Wybierz plik tekstowy");
-        //PrzyciskWybierzPlikTXT.setBounds(26, 130,200,85 );
-        PrzyciskWybierzPlikTXT.setPreferredSize(stdRozmPrzycisku);
-        PrzyciskWybierzPlikTXT.addActionListener(l -> poleWyboru("txt"));
-        //GUI.add(PrzyciskWybierzPlikTXT);
-        tenPanel.add(PrzyciskWybierzPlikTXT);
+        JButton PrzyciskWybierzPlik = new JButton("Wybierz plik z labiryntem");
+        PrzyciskWybierzPlik.setPreferredSize(stdRozmPrzycisku);
+        PrzyciskWybierzPlik.addActionListener(l -> poleWyboru());
+        tenPanel.add(PrzyciskWybierzPlik);
     }
 
-    private void dodajPrzyciskWybierzPlikBIN()
-    {
-        JButton PrzyciskWybierzPlikBIN = new JButton("Wybierz plik binarny");
-        //PrzyciskWybierzPlikBIN.setBounds(26, 239,200,85 );
-        PrzyciskWybierzPlikBIN.setPreferredSize(stdRozmPrzycisku);
-        PrzyciskWybierzPlikBIN.addActionListener(l -> poleWyboru("bin"));
-        //GUI.add(PrzyciskWybierzPlikBIN);
-        tenPanel.add(PrzyciskWybierzPlikBIN);
-    }
 
-    private void poleWyboru(String rozszerzenie)
+    private void poleWyboru()
     {
         JFileChooser wybor = new JFileChooser();
-        FileNameExtensionFilter typ = new FileNameExtensionFilter("Pliki o rozszerzeniu " + rozszerzenie, rozszerzenie);
+        FileNameExtensionFilter typ = new FileNameExtensionFilter("Pliki o rozszerzeniu ", "txt", "bin");
         wybor.setFileFilter(typ);
         int r = wybor.showOpenDialog(GUI);
         if (r == JFileChooser.APPROVE_OPTION)
@@ -221,15 +210,31 @@ public final class Okno {
         tenPanel.add(przyciskRozwiaz);
     }
 
+
+    private void dodajKomunikaty()
+    {
+        JButton komunikaty = new JButton("Pole na komunikaty");
+        komunikaty.setBackground(Color.WHITE);
+        komunikaty.setForeground(Color.BLACK); //czcionka
+        komunikaty.setFont(new Font("Helvetica", Font.BOLD, 16));
+       // komunikaty.setEditable(false);
+       // komunikaty.setLineWrap(true);
+        komunikaty.setPreferredSize(stdRozmPrzycisku);
+        //komunikaty.setVisible(true);
+        tenPanel.add(komunikaty);
+
+    }
+
     private void dodajPrzyciski()
     {
+        this.dodajKomunikaty();
         this.dodajPrzyciskRozwiaz();
         //Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM:
         //this.dodajPrzyciskWybierzWyjscie();
         //this.dodajPrzyciskWybierzWejscie();
-        this.dodajPrzyciskWybierzPlikBIN();
-        this.dodajPrzyciskWybierzPlikTXT();
+        this.dodajPrzyciskWybierzPlik();
         this.dodajPrzyciskLista();
+
     }
 
     public void wczytajGUI()
