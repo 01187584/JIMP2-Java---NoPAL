@@ -236,7 +236,7 @@ public class PodgladLabiryntu extends JPanel{
         if (tempintarr[0] < 0 || tempintarr[1] < 0) return null;
         System.out.printf("fixedcoords: (%d, %d)\n", tempintarr[0], tempintarr[0]);
         tempintarr[0] /= sizeofone; tempintarr[1] /= sizeofone;
-        if (tempintarr[0] >= M.getCols() || tempintarr[1] >= M.getRows()) return null;
+        if (tempintarr[0] > M.getCols() || tempintarr[1] > M.getRows()) return null;
         return tempintarr;
         //return {};
         //return x/sizeofone;
