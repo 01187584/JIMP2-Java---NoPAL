@@ -20,15 +20,27 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import maze.Maze;
+import maze.TextMazeReader;
+import maze.MazeReader;
 
 public final class Okno {
-    private final Maze M;
+    private Maze M;
     private final JFrame GUI;
     private final JPanel tenPanel;
     private final Dimension stdRozmPrzycisku = new Dimension(230, 120);
     private PodgladLabiryntu PL;
     public Okno() {
-        this.M = new Maze(30,30);
+        //this.M = new Maze(30,30);
+        MazeReader Reader = new TextMazeReader();
+        Reader.open("maze-big.txt");
+        M = null;
+        if (Reader.validateFormat()) {
+            M = Reader.read();
+        }
+        Reader.close();
+        if (M != null) {
+            //System.out.println(M);
+        }
         GUI = new JFrame("WyPAL"); // Wydajny Program Analizujący Labirynt
         //GUI.setSize(1280,720);
         GUI.setPreferredSize(new Dimension(1280,360+170));

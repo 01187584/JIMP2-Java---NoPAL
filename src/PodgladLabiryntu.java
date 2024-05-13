@@ -22,14 +22,15 @@ public class PodgladLabiryntu extends JPanel{
     private int maxwidth, maxheight;
     private Graphics G;
     private int[] tempintarr = new int[2];
+    private static final Random rand = new Random();
     //public boolean selectingEntrance = true; Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM
 
     //private int[][] _tempmazetest; // _tempmazetest[kolumna][wiersz] = rodzajPola
 
     public final boolean shouldFixCoords = false; // Czy automatycznie poprawia podane wymiary (maxwidth, maxheight)
     // oraz współrzędne kliknięte myszką o (-22, -56), aby dobrze się wyświetlało i klikało
-    public final boolean shouldFixFlatLaf = true; // Jak powyżej dla FlatLafa, niezależne od powyższego    
-    private final boolean enableCentering = true;
+    public final boolean shouldFixFlatLaf = false; // Jak powyżej dla FlatLafa, niezależne od powyższego    
+    private final boolean enableCentering = false;
     private final int minSize = 10;
     //private BufferedImage bImage;
     //private JLabel imageLabel;
@@ -44,7 +45,7 @@ public class PodgladLabiryntu extends JPanel{
         //this.cols = cols;this.rows = rows;
         setMaxDimensions(maxwidth, maxheight);
         setStartCoords(start_x, start_y);
-        _tempFillRandomMaze();
+        //_tempFillRandomMaze();
 
         //setBackground(new Color(200,200,200)); // Aby odróżnić od białego
         setBackground(new Color(110,111,113)); // Aby odróżnić od białego
@@ -61,10 +62,10 @@ public class PodgladLabiryntu extends JPanel{
                     //if (selectingEntrance) {
                     if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
                         if (M.getField(column, row).isEntranceField()) _tempSetRandomField(column, row);
-                        else M.getField(column, row).type = Field.ENTRANCE_FIELD; // ustawiamy na zielony
+                        else M.setFieldType(M.getField(column, row),Field.ENTRANCE_FIELD); // ustawiamy na zielony
                     } else {
                         if (M.getField(column, row).isExitField()) _tempSetRandomField(column, row);
-                        else M.getField(column, row).type = Field.EXIT_FIELD; // ustawiamy na czerwony
+                        else M.setFieldType(M.getField(column, row),Field.EXIT_FIELD); // ustawiamy na czerwony
                     }
                     
                     NumsToCoords(column, row);
@@ -142,7 +143,7 @@ public class PodgladLabiryntu extends JPanel{
             for (int c = 1;c <= M.getCols();c++) {
                 NumsToCoords(c, r);
                 x = tempintarr[0];y = tempintarr[1];
-                switch (M.getField(c, r).type) {
+                switch (M.getField(c, r).getType()) {
                     case Field.WHITE_FIELD:
                         drawWhite(x, y);
                         break;
@@ -214,7 +215,14 @@ public class PodgladLabiryntu extends JPanel{
         else _tempmazetest[column][row] = 1;
     }*/
     private void _tempSetRandomField(int column, int row) {
-        M.getField(column,row).setRandom();
+        _temp_setRandom(M.getField(column,row));
+    }
+    private int _temp_randrange(int min, int max) {
+        return rand.nextInt(max - min + 1) + min;
+    }
+    public void _temp_setRandom(Field F) {
+        if (_temp_randrange(0, 1) > 0) M.setFieldType(F,Field.WHITE_FIELD);
+        else M.setFieldType(F,Field.BLACK_FIELD);
     }
     private void _tempFillRandomMaze() {
         //_tempmazetest = new int[cols][rows];

@@ -17,6 +17,7 @@ abstract class AbstractMaze extends TypicalUndirectedGraph<Field, Edge<Field>> {
     }
     public abstract void addField();
     public abstract void addField(int type);
+    public abstract void setFieldType(Field F, int type);
     public abstract Field getField(int column, int row);
     // Poniższe 4 zwracają null jeśli nie istnieje takie Pole
     public abstract Field getFieldN(int column, int row);
@@ -54,8 +55,14 @@ public class Maze extends AbstractMaze {
         addField(Field.WHITE_FIELD);
     }
     public void addField(int type) {
-        Field F = new Field(lastVertexNum+1, type);
+        //Field F = new Field(lastVertexNum+1, type);
+        Field F = new Field(lastVertexNum+1);
         addVertex(F);
+        setFieldType(F, type); // ustawia odpowiednio sąsiednie odcinki labiryntu
+    }
+    public void setFieldType(Field F, int type) {
+        //System.out.println("Ustawiam typ na "+String.valueOf(type));
+        F.type = type;
         getFieldCoords(F, false);
         int column, row;
         column = tempintarr[0];row = tempintarr[1];
