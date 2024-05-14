@@ -29,9 +29,10 @@ public final class Okno {
     private final JPanel tenPanel;
     private final Dimension stdRozmPrzycisku = new Dimension(230, 120);
     private PodgladLabiryntu PL;
+    JTextPane komunikaty; // Do komunikatów
     public Okno() {
         //this.M = new Maze(30,30);
-        MazeReader Reader = new TextMazeReader();
+        MazeReader Reader = new TextMazeReader(M);
         Reader.open("maze-test.txt");
         M = null;
         if (Reader.validateFormat()) {
@@ -171,13 +172,20 @@ public final class Okno {
         if (r == JFileChooser.APPROVE_OPTION)
         {
             System.out.println(wybor.getSelectedFile().getAbsolutePath());
-            MazeReader Reader = new TextMazeReader();
-            Reader.open(wybor.getSelectedFile().getAbsolutePath());
+            MazeReader Reader = new TextMazeReader(M); // Wczytujemy do istniejącego labiryntu i go zastępujemy
+            if (Reader.open(wybor.getSelectedFile().getAbsolutePath())) {
+                komunikaty.setText("Wczytywanie labiryntu: sprawdzanie formatu pliku.");
+            }
             if (Reader.validateFormat()) {
-                M = Reader.read();
-                PL.M = M;
+                Reader.read();
+                //PL.M = M; // Już niepotrzebne, PL.M == M
                 zaktualizujRozmiarPodgladuLabiryntu();
+                komunikaty.setText("Trwa rysowanie labiryntu.");
                 PL.repaint();
+                komunikaty.setText("Udało się wczytać labirynt.");
+
+            } else {
+                komunikaty.setText("Format pliku z labiryntem jest nieprawidłowy: "+Reader.getFormatErrorMsg());
             }
             Reader.close();
         }
@@ -246,6 +254,7 @@ public final class Okno {
     private void dodajKomunikaty()
     {
         JTextPane komunikaty = new JTextPane();
+        this.komunikaty = komunikaty;
         komunikaty.setBackground(new Color(60,63,65));
         komunikaty.setForeground(Color.WHITE); //czcionka
         komunikaty.setFont(new Font("Helvetica", Font.BOLD, 16));

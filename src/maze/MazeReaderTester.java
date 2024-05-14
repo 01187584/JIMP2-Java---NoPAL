@@ -9,6 +9,10 @@ public class MazeReaderTester {
             M = Reader.read();
         }
         Reader.close();
-        if (M != null) System.out.println(M);
+        if (M != null) {
+            System.out.println(M);
+            M.resize(10,10);
+            System.out.println(M);
+        }
     }
 }

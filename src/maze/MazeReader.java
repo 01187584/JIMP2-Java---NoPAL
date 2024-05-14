@@ -3,7 +3,7 @@ package maze;
 import java.util.InputMismatchException;
 
 public abstract class MazeReader {
-    protected Maze M;
+    protected Maze M = null;
     protected int columns = 0, rows = 0; // Liczba kolumny i wierszy labiryntu odczytane z pliku
     protected boolean formatValidated = false; // Czy wywołano validateFormat
     protected boolean formatIsValid = false; // Czy validateFormat zwrócił prawdę
@@ -11,7 +11,14 @@ public abstract class MazeReader {
     protected boolean fileIsOpen = false; // Czy udało się otworzyć plik
     protected boolean wasFileRead = false; // Czy przeczytano już plik
     protected String filePath;
+    protected String formatErrorMsg = null;
 
+    public MazeReader() {
+
+    }
+    public MazeReader(Maze M) {
+        this.M = M;
+    }
     // Czy udało się otworzyć plik
     public abstract boolean open(String filePath);
     //public MazeReader(String filePath);
@@ -24,7 +31,7 @@ public abstract class MazeReader {
     
     // Sprawdza, czy można użyć open
     protected void tryOpen() {
-        if (fileIsOpen) throw new IllegalStateException("Otwarty plik musi zostać zamknięty, aby można go odczytać nowy.");
+        if (fileIsOpen) throw new IllegalStateException("Otwarty plik musi zostać zamknięty, aby można było odczytać nowy.");
         wasFileOpened = true;
     }
     // Sprawdza, czy można użyć close
@@ -49,5 +56,8 @@ public abstract class MazeReader {
         if (!wasFileOpened) open(filePath);
         if (!fileIsOpen) throw new IllegalAccessError("Nie udało się otworzyć pliku z labiryntem.");
         formatValidated = true;
+    }
+    public String getFormatErrorMsg() {
+        return formatErrorMsg;
     }
 }

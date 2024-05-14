@@ -1,8 +1,13 @@
 package maze;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import graph.*;
+import maze.TextMazeReader; // Aby uzyskać TextMazeReader.WHITE_FIELD itd. do reprezentacji tekstowej dla toString()
+import java.util.InputMismatchException;
+import java.util.Iterator;
+import java.util.Map;
 
 abstract class AbstractMaze extends TypicalUndirectedGraph<Field, Edge<Field>> {
     protected final boolean checkCorrectUse = true; // Sprawdzamy, czy używamy labiryntu poprawnie
@@ -156,13 +161,36 @@ public class Maze extends AbstractMaze {
         // UWAGA: w obecnej implementacji wywołanie resize może spowodować utatę informacji o Polach i Odcinkach labiryntu
         // tzn. wszystkie Pola zostaną zresetowwane do białych
         // oraz jest niewydajne pamięciowo i czasowo
+        System.out.println("RESIZE: "+getId());
         if (new_cols > max_cols || new_rows > max_rows) {
             if (new_cols > max_cols) max_cols = new_cols;
             if (new_rows > max_rows) max_rows = new_rows;
-            HashSet<Integer> KSet = new HashSet<Integer>(V.keySet());
+            /*HashSet<Integer> KSet = new HashSet<Integer>(V.keySet());
             for (Integer FNum : KSet) {
                 removeVertex(V.get(FNum));
+            }*/
+            //destroy(); // Nie działa...
+            // destroy:
+            //HashMap<Integer, Field> newV = new HashMap<Integer, Field>(V);
+            //HashMap<Integer, Field> newV = (HashMap<Integer, Field>) V.clone();
+            HashMap<Integer, Field> newV = new HashMap<Integer, Field>();
+            for (Integer FieldNum : V.keySet()) {
+                newV.put(FieldNum, V.get(FieldNum));
             }
+            for (Integer FieldNum : newV.keySet()) {
+                //System.out.println("Próbuję usunąć Pole "+newV.get(FieldNum));
+                removeVertex(newV.get(FieldNum));
+            }
+            /*for(Iterator<Map.Entry<Integer, Field>> it = newV.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<Integer, Field> entry = it.next();
+                //it.remove();
+                System.out.println("Próbuję usunąć Pole "+entry.getValue());
+                removeVertex(entry.getValue());
+            }*/
+            // TRZEBA POPRAWIĆ : nie usuwamy elementów newV i V
+
+            lastVertexNum = 0; // Ostrożnie z tym
+
             num_cols = new_cols;num_rows = new_rows;
             for (int r = 0;r < num_rows;r++) {
                 for (int c = 0;c < num_cols;c++) {
@@ -183,5 +211,35 @@ public class Maze extends AbstractMaze {
             return true;
         }
         return checkBounds(column, row);
+    }
+    public String toString() {
+        String str = new String();
+        str += "Oto tekstowa reprezentacja labiryntu o id "+getId()+":\n";
+        char FieldText;
+        for (int r = 1;r <= num_rows;r++) {
+            for (int c = 1;c <= num_cols;c++) {
+                switch (getField(c, r).getType()) {
+                    case Field.WHITE_FIELD:
+                        FieldText = TextMazeReader.WHITE_FIELD;
+                        break;
+                    case Field.BLACK_FIELD:
+                        FieldText = TextMazeReader.BLACK_FIELD;
+                        break;
+                    case Field.ENTRANCE_FIELD:
+                        FieldText = TextMazeReader.ENTRANCE_FIELD;
+                        break;
+                    case Field.EXIT_FIELD:
+                        FieldText = TextMazeReader.EXIT_FIELD;
+                        break;
+                    default:
+                        System.out.println("Nieznane Pole: "+getField(c, r).getType());
+                        throw new InputMismatchException();
+                }
+                str += FieldText;
+            }
+            if (r != num_rows)
+                str += '\n';
+        }
+        return str;
     }
 }

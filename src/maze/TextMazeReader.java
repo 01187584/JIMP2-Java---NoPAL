@@ -4,13 +4,16 @@ import java.io.FileReader;
 import java.util.InputMismatchException;
 
 public class TextMazeReader extends MazeReader {
-    private static final char WHITE_FIELD = ' ';
-    private static final char BLACK_FIELD = 'X';
-    private static final char ENTRANCE_FIELD = 'P';
-    private static final char EXIT_FIELD = 'K';
+    public static final char WHITE_FIELD = ' ';
+    public static final char BLACK_FIELD = 'X';
+    public static final char ENTRANCE_FIELD = 'P';
+    public static final char EXIT_FIELD = 'K';
     private FileReader file;
     public TextMazeReader() {
-
+        super();
+    }
+    public TextMazeReader(Maze M) {
+        super(M);
     }
 
     public boolean open(String filePath) {
@@ -41,7 +44,12 @@ public class TextMazeReader extends MazeReader {
     public Maze read() {
         tryRead();
         System.out.println("Czytamy labirynt.");
-        M = new Maze(columns, rows);
+        if (M == null) {
+            M = new Maze(columns, rows);
+        } else {
+            System.out.println("Robię resize.");
+            M.resize(columns, rows);
+        }
         int character, cur_column, cur_row;
         cur_column = 1;cur_row = 1;
         boolean CR = false;
@@ -82,6 +90,8 @@ public class TextMazeReader extends MazeReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Po wczytaniu:");
+        System.out.println(M);
         return M;
     }
 
@@ -120,13 +130,17 @@ public class TextMazeReader extends MazeReader {
                             CR = true;
                             if (max_cols == 0) max_cols = cur_column;
                             //else if (max_cols != cur_column) throw new InputMismatchException();
-                            else if (max_cols != cur_column) throw new InputMismatchException("Nie zgadza się liczba max_cols z cur_column: "+String.valueOf(max_cols)+" "+String.valueOf(cur_column));
+                            else if (max_cols != cur_column) {
+                                formatErrorMsg = "Nie zgadza się liczba max_cols z cur_column: "+String.valueOf(max_cols)+" "+String.valueOf(cur_column);
+                                throw new InputMismatchException(formatErrorMsg);
+                            }
                             cur_row++;cur_column = 0;
                         }
                         break;
                     default:
                         //throw new InputMismatchException();
-                        throw new InputMismatchException("Niezidentyfikowane Pole: "+character+" ("+(char)character+")");
+                        formatErrorMsg = "Nierozpoznane Pole: "+character+" ("+(char)character+")";
+                        throw new InputMismatchException(formatErrorMsg);
                 }
                 cur_column++;
             }

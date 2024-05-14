@@ -2,6 +2,8 @@ package graph;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 
 // W tej implementacji nie można dodawać 2 takich samych krawędzi (z tego samego wierzchołka początkowego i końcowego)
 public class TypicalUndirectedGraph<GraphVertex extends Vertex, GraphEdge extends Edge<GraphVertex>> extends AbstractGraph<GraphVertex, GraphEdge, HashSet<GraphVertex>> {
@@ -99,10 +101,12 @@ public class TypicalUndirectedGraph<GraphVertex extends Vertex, GraphEdge extend
     public void removeVertex(GraphVertex V) {
         this.V.remove(V.getNum());
         HashSet<GraphEdge> HS = AdjListEdge.get(V);
-        for (GraphEdge Edg : HS) {
+        HashSet<GraphEdge> newHS = new HashSet<GraphEdge>(HS);
+        for (GraphEdge Edg : newHS) {
             removeEdge(Edg);
             HS.remove(Edg);
         }
+        // TRZEBA POPRAWIĆ: robimy nowy newHS i potem go nie czyścimy
         AdjListEdge.remove(V);
         startV.remove(V);endV.remove(V); // Jeśli nie ma, to nic się nie stanie\
     }
@@ -116,10 +120,24 @@ public class TypicalUndirectedGraph<GraphVertex extends Vertex, GraphEdge extend
         E.remove();
     }
     public void destroy() {
-        HashSet<Integer> KSet = new HashSet<Integer>(V.keySet());
+        /*HashSet<Integer> KSet = new HashSet<Integer>(V.keySet());
         for (Integer VerNum : KSet) {
             removeVertex(V.get(VerNum));
+        }*/
+        /*HashSet<Integer> KSet = new HashSet<Integer>(V.keySet());
+        for (Iterator<Integer> i = KSet.iterator(); i.hasNext();) {
+            Integer element = i.next();
+            //i.remove();
+            removeVertex(V.get(element));
+        }*/
+        HashMap<Integer, GraphVertex> newV = new HashMap<Integer, GraphVertex>(V);
+
+        for(Iterator<Map.Entry<Integer, GraphVertex>> it = newV.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Integer, GraphVertex> entry = it.next();
+            //it.remove();
+            removeVertex(entry.getValue());
         }
+        // TRZEBA POPRAWIĆ : nie usuwamy elementów newV i V
     }
     public HashSet<GraphVertex> getAdjacent(GraphVertex V) {
         return AdjacencyList.get(V);
@@ -170,5 +188,8 @@ public class TypicalUndirectedGraph<GraphVertex extends Vertex, GraphEdge extend
     }
     public HashSet<GraphVertex> getEndV() {
         return endV;
+    }
+    public int getId() {
+        return id;
     }
 }

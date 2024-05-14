@@ -54,6 +54,7 @@ public class PodgladLabiryntu extends JPanel{
             @Override
             public void mousePressed(MouseEvent e){
                 //points.add(new Point(e.getX(), e.getY()));
+                System.out.println(M.toString());
                 if (CoordsToNums(e.getX(),e.getY()) == null) System.out.println("Współrzędne Pola są nieprawidłowe (nie kliknięto na Pole), pomijam.");
                 else {
                     int column, row;
