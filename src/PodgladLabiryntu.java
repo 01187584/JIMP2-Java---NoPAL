@@ -31,7 +31,7 @@ public class PodgladLabiryntu extends JPanel{
     // oraz współrzędne kliknięte myszką o (-22, -56), aby dobrze się wyświetlało i klikało
     public final boolean shouldFixFlatLaf = false; // Jak powyżej dla FlatLafa, niezależne od powyższego    
     private final boolean enableCentering = true;
-    private final int minSize = 10;
+    public static final int minSize = 5;
     //private BufferedImage bImage;
     //private JLabel imageLabel;
     //private boolean hasCanvasChanged = true;
@@ -113,8 +113,8 @@ public class PodgladLabiryntu extends JPanel{
         if (this.sizeofone < minSize) this.sizeofone = minSize;
         // Trzeba zawsze aktualizować (centering_start_x, centering_start_y) przy zmianie wspołrzędnych początkowych lub wymiarów
         updateCentering();
-        //setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols(), centering_start_y+sizeofone*M.getRows()));
-        setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols()+11, centering_start_y+sizeofone*M.getRows()+11)); // ?! Czy to przez ten ScrollPAIN?
+        setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols(), centering_start_y+sizeofone*M.getRows()));
+        //setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols()+11, centering_start_y+sizeofone*M.getRows()+11)); // ?! Czy to przez ten ScrollPAIN?
     }
     @Override
     public void paintComponent(Graphics g) {
@@ -207,8 +207,8 @@ public class PodgladLabiryntu extends JPanel{
     private int[] fixFlatLaf(int x, int y) {
         tempintarr[0] = x;tempintarr[1] = y;
         if (shouldFixFlatLaf) {
-            //tempintarr[0] -= 22;tempintarr[1] -= 7;
-            tempintarr[0] -= 220;tempintarr[1] -= 7;
+            tempintarr[0] -= 22;tempintarr[1] -= 7;
+            //tempintarr[0] -= 220;tempintarr[1] -= 7;
         }
         return tempintarr;
     }
@@ -238,23 +238,25 @@ public class PodgladLabiryntu extends JPanel{
     }
     public int[] CoordsToNums(int x, int y) {
         // Zwraca parę (kolumna, wiersz) odpowiadającą współrzędnym Pola, do którego należy punkt (x,y)
-        // Współrzędne Pola są liczone od 0
+        // Współrzędne Pola są liczone od 1
         // Zwraca null, jeśli współrzędne (x,y) są z poza sensownego zakresu
         System.out.printf("initcoords: (%d, %d)\n", x, y);
         if (sizeofone == 0) {
             tempintarr[0] = 0;tempintarr[1] = 0;return tempintarr; // Aby uniknąć dzielenia przez 0
         }
         tempintarr[0] = x-centering_start_x;tempintarr[1] = y-centering_start_y;
-        if (tempintarr[0] < 0 || tempintarr[1] < 0) return null;
+        if (tempintarr[0] <= 0 || tempintarr[1] <= 0) return null;
         System.out.printf("fixedcoords: (%d, %d)\n", tempintarr[0], tempintarr[0]);
         tempintarr[0] /= sizeofone; tempintarr[1] /= sizeofone;
-        if (tempintarr[0] > M.getCols() || tempintarr[1] > M.getRows()) return null;
+        tempintarr[0]++;tempintarr[1]++; // Pierwsze Pole ma współrzędne (1,1)
+        if (tempintarr[0] > M.getCols() || tempintarr[1] > M.getRows() || tempintarr[0] <= 0 || tempintarr[1] <= 0) return null;
         return tempintarr;
         //return {};
         //return x/sizeofone;
     }
     public int[] NumsToCoords(int column, int row) {
         // Zwraca parę (x, y) odpowiadającą współrzędnym punktu, w którym zaczyna się Pole o współrzędnych (column, row)
+        column--;row--; // Początkowe Pole ma współrzędne (1,1)
         tempintarr[0] = (column)*sizeofone; tempintarr[1] = (row)*sizeofone;
         tempintarr[0] += centering_start_x;tempintarr[1] += centering_start_y;
         return tempintarr;

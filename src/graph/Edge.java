@@ -1,6 +1,6 @@
 package graph;
 
-public class Edge<GraphVertex extends AbstractVertex> extends AbstractEdge<GraphVertex> {
+public class Edge <GraphVertex extends AbstractVertex> extends AbstractEdge<GraphVertex> {
     private final static boolean FastEquals = true; // Nie sprawdzamy, czy da się przerzucić obiekt na odpowiedni typ
     private int id;
     private static int last_id = 0;

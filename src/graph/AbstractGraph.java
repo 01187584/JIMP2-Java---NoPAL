@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public abstract class AbstractGraph<GraphVertex extends AbstractVertex, GraphEdge extends AbstractEdge<GraphVertex>, AdjacencyListCollection extends Collection<GraphVertex>> {
+public abstract class AbstractGraph <GraphVertex extends AbstractVertex, GraphEdge extends AbstractEdge<GraphVertex>, AdjacencyListCollection extends Collection<GraphVertex>> {
     protected final Class<GraphVertex> GraphVertexClass;
     protected final Class<GraphEdge> GraphEdgeClass;
     //public HashSet<GraphVertex> V = new HashSet<GraphVertex>();

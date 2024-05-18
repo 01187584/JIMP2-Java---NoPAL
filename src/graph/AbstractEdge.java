@@ -1,6 +1,6 @@
 package graph;
 
-public abstract class AbstractEdge<GraphVertex extends AbstractVertex> {
+public abstract class AbstractEdge <GraphVertex extends AbstractVertex> {
     protected GraphVertex start;
     protected GraphVertex end;
     //private int refGraph;

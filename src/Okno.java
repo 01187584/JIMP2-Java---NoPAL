@@ -86,7 +86,8 @@ public final class Okno {
         
         // Gdzieś jest POMYŁKA o 10 pikseli w wysokości i szerokości:
 
-        PL = new PodgladLabiryntu(0-10, 0-10, 1260-1-stdRozmPrzycisku.width, 761-1, M);
+        //PL = new PodgladLabiryntu(0-PodgladLabiryntu.minSize, 0-PodgladLabiryntu.minSize, 1260-1-stdRozmPrzycisku.width, 761-1, M);
+        PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, M);
         //PL = new PodgladLabiryntu(0, 0, 1023, 754, 10, 10);
         GUI.addComponentListener(new ComponentAdapter() {
             @Override
@@ -102,7 +103,13 @@ public final class Okno {
     }
 
     private void zaktualizujRozmiarPodgladuLabiryntu() {
-        PL.setMaxDimensions(GUI.getBounds().width-21-stdRozmPrzycisku.width,GUI.getBounds().height-60);
+        System.out.printf("Okno ma wymiary (%s, %s)\n", String.valueOf(GUI.getBounds().width), String.valueOf(GUI.getBounds().height));
+        // Aktualizujemyy ile miejsca może maksymalnie zająć Podgląd Labiryntu
+        PL.setMaxDimensions(GUI.getBounds().width-27-stdRozmPrzycisku.width,GUI.getBounds().height-37);
+        //PL.setMaxDimensions(GUI.getBounds().width-100-stdRozmPrzycisku.width,GUI.getBounds().height-180);
+        //PL.setMaxDimensions(GUI.getBounds().width-100-stdRozmPrzycisku.width,GUI.getBounds().height-180);
+        //PL.setMaxDimensions(GUI.getBounds().width-301-stdRozmPrzycisku.width,GUI.getBounds().height-167);
+        //PL.setMaxDimensions(GUI.getBounds().width-21-stdRozmPrzycisku.width,GUI.getBounds().height-60);
     }
 
     private void dodajPrzyciskLista()
@@ -173,21 +180,30 @@ public final class Okno {
         {
             System.out.println(wybor.getSelectedFile().getAbsolutePath());
             MazeReader Reader = new TextMazeReader(M); // Wczytujemy do istniejącego labiryntu i go zastępujemy
+            komunikaty.setText("Otwieranie pliku...");
+            komunikaty.paintImmediately(komunikaty.getVisibleRect());
             if (Reader.open(wybor.getSelectedFile().getAbsolutePath())) {
-                komunikaty.setText("Wczytywanie labiryntu: sprawdzanie formatu pliku.");
-            }
-            if (Reader.validateFormat()) {
-                Reader.read();
-                //PL.M = M; // Już niepotrzebne, PL.M == M
-                zaktualizujRozmiarPodgladuLabiryntu();
-                komunikaty.setText("Trwa rysowanie labiryntu.");
-                PL.repaint();
-                komunikaty.setText("Udało się wczytać labirynt.");
-
+                //System.out.println("DEBUG Wczytywanie labiryntu: sprawdzanie formatu pliku.");
+                komunikaty.setText("Sprawdzanie formatu pliku...");
+                komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                if (Reader.validateFormat()) {
+                    komunikaty.setText("Wczytywanie labiryntu...");
+                    komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                    Reader.read();
+                    //PL.M = M; // Już niepotrzebne, PL.M == M
+                    zaktualizujRozmiarPodgladuLabiryntu();
+                    komunikaty.setText("Rysowanie labiryntu...");
+                    komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                    PL.repaint();
+                    komunikaty.setText("Udało się wczytać labirynt.");
+    
+                } else {
+                    komunikaty.setText("Format pliku z labiryntem jest nieprawidłowy: "+Reader.getFormatErrorMsg());
+                }
+                Reader.close();
             } else {
-                komunikaty.setText("Format pliku z labiryntem jest nieprawidłowy: "+Reader.getFormatErrorMsg());
+                komunikaty.setText("Nie udało się otworzyć pliku z labiryntem!");
             }
-            Reader.close();
         }
         else
         {
@@ -257,6 +273,8 @@ public final class Okno {
         this.komunikaty = komunikaty;
         komunikaty.setBackground(new Color(60,63,65));
         komunikaty.setForeground(Color.WHITE); //czcionka
+        //komunikaty.setCaret(null);
+        komunikaty.setCaretColor(new Color(60,63,65));
         komunikaty.setFont(new Font("Helvetica", Font.BOLD, 16));
         StyledDocument doc = komunikaty.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();

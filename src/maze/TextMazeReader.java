@@ -91,7 +91,7 @@ public class TextMazeReader extends MazeReader {
             e.printStackTrace();
         }
         System.out.println("Po wczytaniu:");
-        System.out.println(M);
+        System.out.println(M); // Wypisywanie labiryntu jest niewydajne!
         return M;
     }
 

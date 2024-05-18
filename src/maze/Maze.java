@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 abstract class AbstractMaze extends TypicalUndirectedGraph<Field, Edge<Field>> {
-    protected final boolean checkCorrectUse = true; // Sprawdzamy, czy używamy labiryntu poprawnie
+    protected final static boolean checkCorrectUse = true; // Sprawdzamy, czy używamy labiryntu poprawnie
     protected int num_cols;
     protected int num_rows;
     protected int max_cols;
@@ -67,11 +67,17 @@ public class Maze extends AbstractMaze {
     }
     public void setFieldType(Field F, int type) {
         //System.out.println("Ustawiam typ na "+String.valueOf(type));
-        F.type = type;
         getFieldCoords(F, false);
         int column, row;
         column = tempintarr[0];row = tempintarr[1];
         Field F0;
+
+        if (F.isWhite()) {
+            // TRZEBA jeszcze usunąć przecież krawędzie!
+        }
+        F.type = type;
+        
+        /*
         if (!F.isBlack()) {
             F0 = getFieldN(column, row);
             if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
@@ -81,7 +87,7 @@ public class Maze extends AbstractMaze {
             if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
             F0 = getFieldW(column, row);
             if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
-        }
+        }*/
     }
     public Field getField(int column, int row) {
         if (!checkCorrectUse || checkBounds(column, row, true))
@@ -151,6 +157,12 @@ public class Maze extends AbstractMaze {
         }
         addEdge(F1, F2);
     }
+    private void removeMazeSegment(Field F1, Field F2, boolean checkCorrectUse) {
+        if (checkCorrectUse) {
+            if (!areFieldsAdjacent(F1, F2, true)) throw new IllegalArgumentException("Pola powinny sąsiadować ze sobą, aby utworzyć Odcinek Labiryntu.");
+        }
+        
+    }
     public int getCols() {
         return num_cols;
     }
@@ -212,9 +224,12 @@ public class Maze extends AbstractMaze {
         }
         return checkBounds(column, row);
     }
+    // UWAGA: Wypisywanie labiryntu jest niewydajne!
     public String toString() {
-        String str = new String();
-        str += "Oto tekstowa reprezentacja labiryntu o id "+getId()+":\n";
+        //String str = new String();
+        System.gc(); // Tymczasowo, zwolnimy trochę pamięci
+        StringBuilder str = new StringBuilder();
+        str.append("Oto tekstowa reprezentacja labiryntu o id ");str.append(getId());str.append(":\n");
         char FieldText;
         for (int r = 1;r <= num_rows;r++) {
             for (int c = 1;c <= num_cols;c++) {
@@ -235,11 +250,13 @@ public class Maze extends AbstractMaze {
                         System.out.println("Nieznane Pole: "+getField(c, r).getType());
                         throw new InputMismatchException();
                 }
-                str += FieldText;
+                str.append(FieldText);
+                //str += FieldText;
             }
             if (r != num_rows)
-                str += '\n';
+                str.append('\n');
+                //str += '\n';
         }
-        return str;
+        return str.toString();
     }
 }
