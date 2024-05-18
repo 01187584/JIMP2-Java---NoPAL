@@ -26,7 +26,7 @@ public class Edge <GraphVertex extends AbstractVertex> extends AbstractEdge<Grap
             if (((Edge<GraphVertex>)o).id != id) return false;
             return true;
         }
-        if (!(o instanceof TypicalUndirectedGraph)) return false;
+        if (!(o instanceof Edge<?>)) return false;
         try {
             if (((Edge<GraphVertex>)o).id != id) return false;
         } catch (Exception e) {
