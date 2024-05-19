@@ -64,12 +64,23 @@ public class TypicalUndirectedGraph implements Graph {
 
     @Override
     public void destroy() {
+        removeAllVertices();
+        V = null;
+        E = null;
+        StartV = null;
+        EndV = null;
+        //id = null //final
+    }
+
+    @Override
+    public void removeAllVertices() {
         for (Integer numVertex : V.keySet()) {
             getVertex(numVertex).destroy();
         }
         V.clear();
         StartV.clear();
         EndV.clear();
+        LastVertexNum = 0;
     }
 
     @Override
@@ -132,7 +143,7 @@ public class TypicalUndirectedGraph implements Graph {
         sb.append("}\nLista sąsiedztwa:\n[\n");
         for (Integer VertexNum : V.keySet()) {
             //s += Vert.toString()+" : "+AdjacencyList.get(Vert).toString()+",\n";
-            sb.append(VertexNum);sb.append(" : ");
+            sb.append(V.get(VertexNum));sb.append(" : ");
             sb.append(V.get(VertexNum).toStringBuilder());
             sb.append('\n');
         }

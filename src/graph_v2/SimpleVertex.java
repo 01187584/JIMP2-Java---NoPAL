@@ -9,7 +9,7 @@ public class SimpleVertex implements Vertex {
     protected final int VertexNum;
     private boolean IsStartVertex;
     private boolean IsEndVertex;
-    private final Graph refGraph;
+    protected final Graph refGraph;
 
     protected SimpleVertex(Graph G) {
         refGraph = G;
@@ -37,6 +37,7 @@ public class SimpleVertex implements Vertex {
 
     @Override
     public HashSet<Vertex> getAdjacentVetices() {
+        //System.out.println(id+"FIAJOIJEFOIJ "+String.valueOf(AdjacentVertices.size()));
         return AdjacentVertices;
     }
 
@@ -89,15 +90,15 @@ public class SimpleVertex implements Vertex {
         StringBuilder sb = new StringBuilder();
         sb.append('{');
         Vertex lastVertex = null;
-        for (Vertex vertex : AdjacentVertices) {
+        for (Vertex vertex : getAdjacentVetices()) {
             if (lastVertex != null) {
-                sb.append(lastVertex.getNum());
+                sb.append(lastVertex.toString());
                 sb.append(", ");
             }
             lastVertex = vertex;
         }
         if (lastVertex != null)
-            sb.append(lastVertex.getNum());
+            sb.append(lastVertex.toString());
         sb.append('}');
         return sb;
     }

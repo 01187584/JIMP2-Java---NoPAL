@@ -1,16 +1,15 @@
-package maze;
+package maze.v1;
 
-//import java.util.HashMap;
-//import java.util.HashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 
-import graph_v2.*;
+import graph.*;
+import maze.TextMazeReader; // Aby uzyskać TextMazeReader.WHITE_FIELD itd. do reprezentacji tekstowej dla toString()
+import java.util.InputMismatchException;
+import java.util.Iterator;
+import java.util.Map;
 
-//import maze.TextMazeReader; // Aby uzyskać TextMazeReader.WHITE_FIELD itd. do reprezentacji tekstowej dla toString()
-//import java.util.InputMismatchException;
-//import java.util.Iterator;
-//import java.util.Map;
-
-/*abstract class AbstractMaze extends TypicalUndirectedGraph<Field, Edge<Field>> {
+abstract class AbstractMaze extends TypicalUndirectedGraph<Field, Edge<Field>> {
     protected final static boolean checkCorrectUse = true; // Sprawdzamy, czy używamy labiryntu poprawnie
     protected int num_cols;
     protected int num_rows;
@@ -39,25 +38,13 @@ import graph_v2.*;
     public abstract void resize(int new_cols, int new_rows);
     public abstract boolean checkBounds(int column, int row); // throwException == false
     public abstract boolean checkBounds(int column, int row, boolean throwException);
-}*/
+}
 
-//public class Maze extends AbstractMaze {
-public class Maze extends TypicalUndirectedGraph {
-    private final static boolean checkCorrectUse = true; // Sprawdzamy, czy używamy labiryntu poprawnie
-    private int num_cols;
-    private int num_rows;
-    private int max_cols;
-    private int max_rows;
+public class Maze extends AbstractMaze {
     private int tempintarr[] = new int[2];
-    private static Edge SampleMazeSegment = new MazeSegment();
 
     public Maze(int num_cols, int num_rows) {
         super();
-        buildMaze(num_cols, num_rows);
-    }
-
-    private void buildMaze(int num_cols, int num_rows) { // Obecnie używane przez konstruktor i resize
-        //TODO: do poprawy - nie powinno być używane przez resize do robienia całego labiryntu od nowa
         this.num_cols = num_cols;
         this.num_rows = num_rows;
         this.max_cols = num_cols;
@@ -69,37 +56,43 @@ public class Maze extends TypicalUndirectedGraph {
             }
         }
     }
-    public void destroyMaze() {
-        destroy();
-        num_cols = -1;
-        num_rows = -1;
-        max_cols = -1;
-        max_rows = -1;
-        tempintarr[0] = -1;
-        tempintarr[1] = -1;
-        tempintarr = null;
-    }
-
-    @Override
-    public Vertex addVertex() {
-        return new Field(this);
-    }
-
     public void addField() {
         addField(Field.WHITE_FIELD);
     }
     public void addField(int type) {
         //Field F = new Field(lastVertexNum+1, type);
-        //Field F = new Field(lastVertexNum+1);
-        //addVertex(F);
-        //setFieldType(F, type); // ustawia odpowiednio sąsiednie odcinki labiryntu
-        ((Field)addVertex()).setFieldType(type); // ustawia odpowiednio sąsiednie odcinki labiryntu
+        Field F = new Field(lastVertexNum+1);
+        addVertex(F);
+        setFieldType(F, type); // ustawia odpowiednio sąsiednie odcinki labiryntu
     }
+    public void setFieldType(Field F, int type) {
+        //System.out.println("Ustawiam typ na "+String.valueOf(type));
+        getFieldCoords(F, false);
+        int column, row;
+        column = tempintarr[0];row = tempintarr[1];
+        Field F0;
 
+        if (F.isWhite()) {
+            // TRZEBA jeszcze usunąć przecież krawędzie!
+        }
+        F.type = type;
+        
+        /*
+        if (!F.isBlack()) {
+            F0 = getFieldN(column, row);
+            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
+            F0 = getFieldE(column, row);
+            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
+            F0 = getFieldS(column, row);
+            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
+            F0 = getFieldW(column, row);
+            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
+        }*/
+    }
     public Field getField(int column, int row) {
         if (!checkCorrectUse || checkBounds(column, row, true))
-            return (Field)getVertex((row-1)*num_cols+column);
-        return (Field)getVertex((row-1)*num_cols+column);
+            return getVertex((row-1)*num_cols+column);
+        return getVertex((row-1)*num_cols+column);
     }
     public Field getFieldN(int column, int row) {
         if (checkBounds(column, row-1)) return getField(column, row-1);
@@ -154,7 +147,6 @@ public class Maze extends TypicalUndirectedGraph {
         if ((c1 == c2+1 && r1 == r2) || (c1+1 == c2 && r1 == r2) || (c1 == c2 && r1 == r2+1) || (c1 == c2 && r1+1 == r2)) return true;
         return false;
     }
-    /*
     public void addMazeSegment(Field F1, Field F2) {
         addMazeSegment(F1, F2, checkCorrectUse);
     }
@@ -170,14 +162,14 @@ public class Maze extends TypicalUndirectedGraph {
             if (!areFieldsAdjacent(F1, F2, true)) throw new IllegalArgumentException("Pola powinny sąsiadować ze sobą, aby utworzyć Odcinek Labiryntu.");
         }
         
-    }*/
+    }
     public int getCols() {
         return num_cols;
     }
     public int getRows() {
         return num_rows;
     }
-    /*public void resize(int new_cols, int new_rows) {
+    public void resize(int new_cols, int new_rows) {
         // UWAGA: w obecnej implementacji wywołanie resize może spowodować utatę informacji o Polach i Odcinkach labiryntu
         // tzn. wszystkie Pola zostaną zresetowwane do białych
         // oraz jest niewydajne pamięciowo i czasowo
@@ -193,14 +185,14 @@ public class Maze extends TypicalUndirectedGraph {
             // destroy:
             //HashMap<Integer, Field> newV = new HashMap<Integer, Field>(V);
             //HashMap<Integer, Field> newV = (HashMap<Integer, Field>) V.clone();
-            /*HashMap<Integer, Field> newV = new HashMap<Integer, Field>();
+            HashMap<Integer, Field> newV = new HashMap<Integer, Field>();
             for (Integer FieldNum : V.keySet()) {
                 newV.put(FieldNum, V.get(FieldNum));
             }
             for (Integer FieldNum : newV.keySet()) {
                 //System.out.println("Próbuję usunąć Pole "+newV.get(FieldNum));
                 removeVertex(newV.get(FieldNum));
-            }*/
+            }
             /*for(Iterator<Map.Entry<Integer, Field>> it = newV.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<Integer, Field> entry = it.next();
                 //it.remove();
@@ -209,7 +201,7 @@ public class Maze extends TypicalUndirectedGraph {
             }*/
             // TRZEBA POPRAWIĆ : nie usuwamy elementów newV i V
 
-            /*lastVertexNum = 0; // Ostrożnie z tym
+            lastVertexNum = 0; // Ostrożnie z tym
 
             num_cols = new_cols;num_rows = new_rows;
             for (int r = 0;r < num_rows;r++) {
@@ -220,12 +212,6 @@ public class Maze extends TypicalUndirectedGraph {
         } else {
             num_cols = new_cols;num_rows = new_rows;
         }
-    }*/
-    public void resize(int new_cols, int new_rows) {
-        //UWAGA: w obecnej implementacji wywołanie resize usunie wszystkie Pola i OdcinkiLabiryntu oraz jest niewydajny!
-        //TODO: do poprawy - resize nie powinno robić całego labiryntu od nowa
-        removeAllVertices();
-        buildMaze(new_cols, new_rows);
     }
     public boolean checkBounds(int column, int row) {
         return (column > 0 && column < num_cols+1 && row > 0 && row < num_rows+1);
@@ -239,7 +225,7 @@ public class Maze extends TypicalUndirectedGraph {
         return checkBounds(column, row);
     }
     // UWAGA: Wypisywanie labiryntu jest niewydajne!
-    /*public String toString() {
+    public String toString() {
         //String str = new String();
         System.gc(); // Tymczasowo, zwolnimy trochę pamięci
         StringBuilder str = new StringBuilder();
@@ -272,22 +258,5 @@ public class Maze extends TypicalUndirectedGraph {
                 //str += '\n';
         }
         return str.toString();
-    }*/
-    public String toString() {
-        //System.gc(); // Tymczasowo, zwolnimy trochę pamięci
-        StringBuilder str = new StringBuilder();
-        str.append("Oto tekstowo-graficzna reprezentacja labiryntu o id ");str.append(hashCode());str.append(":\n");
-        for (int r = 1;r <= num_rows;r++) {
-            for (int c = 1;c <= num_cols;c++) {
-                str.append(getField(c, r).toString(false));
-            }
-            str.append('\n');
-        }
-        return str.toString();
-    }
-
-    @Override
-    public Edge getSampleEdge() {
-        return SampleMazeSegment;
     }
 }

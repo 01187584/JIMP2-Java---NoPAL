@@ -8,13 +8,14 @@ public class GraphTester {
         //TestGraph.test();
         //TestGraph.addVertex(V1);
         //TestGraph.addVertex(V2);
-        TestGraph.addVertex();TestGraph.addVertex();
+        TestGraph.addVertex();TestGraph.addVertex();TestGraph.addVertex();
+        TestGraph.addEdge(1,2);
         System.out.println(TestGraph);
         //TestGraph.addEdge(new Edge<Vertex>(null, null));
         //TestGraph.addEdge(new Edge<Vertex>(TestGraph.getVertex(1), TestGraph.getVertex(2)));
         //TestGraph.addEdge(TestGraph.getVertex(1), TestGraph.getVertex(2));
         //TestGraph.addVertices(10);
-        TestGraph.addEdge(1,2);
+        TestGraph.addEdge(2,3);
         System.out.println(TestGraph);
         TestGraph.destroy();
         System.out.println(TestGraph);

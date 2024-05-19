@@ -16,6 +16,7 @@ public interface Graph {
     public void removeVertex(Vertex V);
     //void removeEdge(Edge E); 
     public void destroy();
+    public void removeAllVertices();
     //getAdjacent(Vertex V);
     public boolean equals(Object o);
     public int hashCode();

@@ -58,32 +58,33 @@ public class TextMazeReader extends MazeReader {
             while ((character = file.read()) != -1) {
                 switch (character) {
                     case WHITE_FIELD:
-                        M.setFieldType(M.getField(cur_column, cur_row), Field.WHITE_FIELD);
+                        M.getField(cur_column, cur_row).setFieldType(Field.WHITE_FIELD);
                         break;
                     case BLACK_FIELD:
-                        M.setFieldType(M.getField(cur_column, cur_row), Field.BLACK_FIELD);
+                        M.getField(cur_column, cur_row).setFieldType(Field.BLACK_FIELD);
                         break;
                     case ENTRANCE_FIELD:
-                        M.setFieldType(M.getField(cur_column, cur_row), Field.ENTRANCE_FIELD);
+                        M.getField(cur_column, cur_row).setFieldType(Field.ENTRANCE_FIELD);
                         break;
                     case EXIT_FIELD:
-                        M.setFieldType(M.getField(cur_column, cur_row), Field.EXIT_FIELD);
+                        M.getField(cur_column, cur_row).setFieldType(Field.EXIT_FIELD);
                         break;
                     case 10: // LF
                         if (!CR) {
                             LF = true;
                             cur_row++;cur_column = 0;
-                        }
+                        } else cur_column--; // jest później zwiększana, a checmy zignorować
                         break;
-                    case 15: // CR
+                    case 13: // CR
                         if (!LF) {
                             CR = true;
                             cur_row++;cur_column = 0;
-                        }
+                        } else cur_column--; // jest później zwiększana, a checmy zignorować
                         break;
                     default:
                         System.out.println("Coś jest bardzo nie tak we wczytywaniu.");
                         throw new IllegalStateException();
+                        //break;
                 }
                 cur_column++;
             }
@@ -123,9 +124,9 @@ public class TextMazeReader extends MazeReader {
                             //else if (max_cols != cur_column) throw new InputMismatchException();
                             else if (max_cols != cur_column) throw new InputMismatchException("Nie zgadza się liczba max_cols z cur_column: "+String.valueOf(max_cols)+" "+String.valueOf(cur_column));
                             cur_row++;cur_column = 0;
-                        }
+                        } else cur_column--; // jest później zwiększana, a checmy zignorować
                         break;
-                    case 15: // CR
+                    case 13: // CR
                         if (!LF) {
                             CR = true;
                             if (max_cols == 0) max_cols = cur_column;
@@ -135,13 +136,15 @@ public class TextMazeReader extends MazeReader {
                                 throw new InputMismatchException(formatErrorMsg);
                             }
                             cur_row++;cur_column = 0;
-                        }
+                        } else cur_column--; // jest później zwiększana, a checmy zignorować
                         break;
                     default:
                         //throw new InputMismatchException();
                         formatErrorMsg = "Nierozpoznane Pole: "+character+" ("+(char)character+")";
                         throw new InputMismatchException(formatErrorMsg);
+                        //break;
                 }
+                //System.out.println("DEBUG"+String.valueOf(character)+' '+String.valueOf((char)character)+' '+cur_column);
                 cur_column++;
             }
         } catch (Exception e) {

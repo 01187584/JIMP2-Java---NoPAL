@@ -84,7 +84,6 @@ public final class Okno {
         //PL = new PodgladLabiryntu(26+200, 21, 1280-26-200, 820-21, 10, 10);
         //PL = new PodgladLabiryntu(0, 5, 1260-1-stdRozmPrzycisku.width, 761-1, 150, 50);
         
-        // Gdzieś jest POMYŁKA o 10 pikseli w wysokości i szerokości:
 
         //PL = new PodgladLabiryntu(0-PodgladLabiryntu.minSize, 0-PodgladLabiryntu.minSize, 1260-1-stdRozmPrzycisku.width, 761-1, M);
         PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, M);
@@ -105,7 +104,8 @@ public final class Okno {
     private void zaktualizujRozmiarPodgladuLabiryntu() {
         System.out.printf("Okno ma wymiary (%s, %s)\n", String.valueOf(GUI.getBounds().width), String.valueOf(GUI.getBounds().height));
         // Aktualizujemyy ile miejsca może maksymalnie zająć Podgląd Labiryntu
-        PL.setMaxDimensions(GUI.getBounds().width-27-stdRozmPrzycisku.width,GUI.getBounds().height-37);
+        PL.setMaxDimensions(GUI.getBounds().width-37-stdRozmPrzycisku.width-PodgladLabiryntu.minSize,GUI.getBounds().height-37-25-PodgladLabiryntu.minSize);
+        //PL.setMaxDimensions(GUI.getBounds().width-27-stdRozmPrzycisku.width,GUI.getBounds().height-37);
         //PL.setMaxDimensions(GUI.getBounds().width-100-stdRozmPrzycisku.width,GUI.getBounds().height-180);
         //PL.setMaxDimensions(GUI.getBounds().width-100-stdRozmPrzycisku.width,GUI.getBounds().height-180);
         //PL.setMaxDimensions(GUI.getBounds().width-301-stdRozmPrzycisku.width,GUI.getBounds().height-167);
