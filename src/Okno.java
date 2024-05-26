@@ -7,32 +7,40 @@ import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import maze.MazeReader;
+import maze.TextMazeReader;
+
 import java.awt.*;
 //import java.util.concurrent.TimeUnit;
 import java.awt.event.*;
 import java.io.*; // printf
 
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import maze.Maze;
-import maze.TextMazeReader;
-import maze.MazeReader;
+//import maze.Maze;
+//import maze.TextMazeReader;
+//import maze.MazeReader;
+import observer.MazeEventManager;
+import observer.MazeEventListener;
+import observer.MazeEvent;
 
-public final class Okno {
-    private Maze M;
+public final class Okno implements MazeEventListener {
+    //private Maze M;
+    private MazeEventManager MEM;
     private final JFrame GUI;
     private final JPanel tenPanel;
     private final Dimension stdRozmPrzycisku = new Dimension(230, 120);
     private PodgladLabiryntu PL;
     JTextPane komunikaty; // Do komunikatów
-    public Okno() {
-        //this.M = new Maze(30,30);
-        MazeReader Reader = new TextMazeReader(M);
+    public Okno(MazeEventManager MEM) {
+        this.MEM = MEM;
+        MEM.addEventListener(this);
+        /*MazeReader Reader = new TextMazeReader(M);
         Reader.open("maze-test.txt");
         M = null;
         if (Reader.validateFormat()) {
@@ -41,7 +49,7 @@ public final class Okno {
         Reader.close();
         if (M != null) {
             //System.out.println(M);
-        }
+        }*/
         GUI = new JFrame("WyPAL"); // Wydajny Program Analizujący Labirynt
         //GUI.setSize(1280,720);
         GUI.setPreferredSize(new Dimension(1280,360+170));
@@ -74,6 +82,56 @@ public final class Okno {
         GUI.pack();
     }
 
+    public void actionPerformed(MazeEvent event) {
+        switch (event.getType()) {
+            case SELECT_ALGORITHM:
+                // TODO: dodać obsługę wybierania algorytmu
+                break;
+            case SOLVE_MAZE:
+                break;
+            case LOAD_TEXT_MAZE: // celowo bez break
+            case LOAD_BINARY_MAZE:
+            case LOAD_MAZE:
+                switch (event.getStatus()) {
+                    case START:
+                        komunikaty.setText("Otwieranie pliku...");
+                    case LOAD_MAZE_OPENING_ERROR:
+                        komunikaty.setText("Wczytywanie labiryntu...");
+                        break;
+                    case LOAD_MAZE_FILE_OPENED:
+                        komunikaty.setText("Sprawdzanie formatu pliku...");
+                        break;
+                    case LOAD_MAZE_FORMAT_ERROR:
+                        komunikaty.setText(event.getStatusMessage());
+                        break;
+                    case LOAD_MAZE_FORMAT_VALIDATED:
+                        komunikaty.setText(event.getStatusMessage());
+                        break;
+                    case OK:
+                        komunikaty.setText("Rysowanie labiryntu...");
+                        komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                        PL.repaint();
+                        komunikaty.setText("Udało się wczytać labirynt.");
+                        break;
+                }
+                komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                break;
+            case SET_FIELD_TYPE:
+                // TODO: obsłużyć błąd - można podać nieprawidłowy typ Pola
+                switch (event.getStatus()) {
+                    case SET_FIELD_TYPE_INVALID_COORDS:
+                        komunikaty.setText(event.getStatusMessage());
+                        break;
+                    case OK:
+                        // TODO
+                        komunikaty.setText("Ustawiono Pole ### na ###");
+                        PL.repaint();
+                        break;
+                }
+                break;
+        }
+    }
+
     private void dodajPodgladLabiryntu()
     {
         /*JPanel widokLabiryntu = new JPanel();
@@ -87,7 +145,7 @@ public final class Okno {
         // Gdzieś jest POMYŁKA o 10 pikseli w wysokości i szerokości:
 
         //PL = new PodgladLabiryntu(0-PodgladLabiryntu.minSize, 0-PodgladLabiryntu.minSize, 1260-1-stdRozmPrzycisku.width, 761-1, M);
-        PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, M);
+        PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, MEM);
         //PL = new PodgladLabiryntu(0, 0, 1023, 754, 10, 10);
         GUI.addComponentListener(new ComponentAdapter() {
             @Override
@@ -178,7 +236,7 @@ public final class Okno {
         int r = wybor.showOpenDialog(GUI);
         if (r == JFileChooser.APPROVE_OPTION)
         {
-            System.out.println(wybor.getSelectedFile().getAbsolutePath());
+            /*System.out.println(wybor.getSelectedFile().getAbsolutePath());
             MazeReader Reader = new TextMazeReader(M); // Wczytujemy do istniejącego labiryntu i go zastępujemy
             komunikaty.setText("Otwieranie pliku...");
             komunikaty.paintImmediately(komunikaty.getVisibleRect());
@@ -203,7 +261,8 @@ public final class Okno {
                 Reader.close();
             } else {
                 komunikaty.setText("Nie udało się otworzyć pliku z labiryntem!");
-            }
+            }*/
+            MEM.notifyListeners(new MazeEvent(MazeEvent.Type.LOAD_MAZE, new String[] {wybor.getSelectedFile().getAbsolutePath()}));
         }
         else
         {

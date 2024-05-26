@@ -10,13 +10,16 @@ import java.util.List;
 import java.util.*;
 
 import maze.Field;
-import maze.Maze;
+//import maze.Maze;
+import observer.MazeEvent;
+import observer.MazeEventManager;
 
-public class PodgladLabiryntu extends JPanel{
+public class PodgladLabiryntu extends JPanel {
     //private Random rand;
     private int start_x, start_y;
     private int centering_start_x, centering_start_y;
-    public Maze M;
+    //public Maze M;
+    private MazeEventManager MEM;
     //private int cols, rows;
     private int sizeofone;
     private int maxwidth, maxheight;
@@ -38,9 +41,10 @@ public class PodgladLabiryntu extends JPanel{
     //private List<Point> points = new ArrayList<>();
     
     //public PodgladLabiryntu(int start_x, int start_y, int maxwidth, int maxheight, int cols, int rows) {
-    public PodgladLabiryntu(int start_x, int start_y, int maxwidth, int maxheight, Maze M) {
+    public PodgladLabiryntu(int start_x, int start_y, int maxwidth, int maxheight, MazeEventManager MEM) {
         // Maze M powinien być wcześniej zainicjowany
-        this.M = M;
+        //this.M = M;
+        this.MEM = MEM;
         //this.rand = new Random();
         //this.cols = cols;this.rows = rows;
         setMaxDimensions(maxwidth, maxheight);
@@ -52,36 +56,47 @@ public class PodgladLabiryntu extends JPanel{
         //setBackground(new Color(23,99,8));
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e){
+            public void mousePressed(MouseEvent e) {
                 //points.add(new Point(e.getX(), e.getY()));
-                System.out.println(M.toString());
+                //System.out.println(M.toString());
                 if (CoordsToNums(e.getX(),e.getY()) == null) System.out.println("Współrzędne Pola są nieprawidłowe (nie kliknięto na Pole), pomijam.");
                 else {
                     int column, row;
                     column = tempintarr[0];row = tempintarr[1];
                     System.out.printf("CoordsToNums: (%d, %d)\n", column, row);
                     //if (selectingEntrance) {
-                    if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+                    /*if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
                         if (M.getField(column, row).isEntranceField()) _tempSetRandomField(column, row);
                         else M.setFieldType(M.getField(column, row),Field.ENTRANCE_FIELD); // ustawiamy na zielony
                     } else {
                         if (M.getField(column, row).isExitField()) _tempSetRandomField(column, row);
                         else M.setFieldType(M.getField(column, row),Field.EXIT_FIELD); // ustawiamy na czerwony
+                    }*/
+                    int[] intData = new int[] {column, row, 0};
+                    // TODO: Field.getRandomType()
+                    MazeEvent ME = new MazeEvent(MazeEvent.Type.SET_FIELD_TYPE, intData);
+                    if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+                        if (MEM.getMaze().getField(column, row).isEntranceField()) intData[2] = Field.getRandomType();
+                        else intData[2] = Field.ENTRANCE_FIELD; // ustawiamy na zielony
+                    } else {
+                        if (MEM.getMaze().getField(column, row).isExitField()) intData[2] = Field.getRandomType();
+                        else intData[2] = Field.EXIT_FIELD; // ustawiamy na czerwony
                     }
+                    MEM.notifyListeners(ME);
                     
-                    NumsToCoords(column, row);
-                    System.out.printf("NumsToCoords: (%d, %d)\n", column, row);
-                    repaint(); // przerysowujemy
+                    //NumsToCoords(column, row);
+                    //System.out.printf("NumsToCoords: (%d, %d)\n", column, row);
+                    //repaint(); // repaint jest teraz w Oknie po uzyskaniu odpowiedniego MazeEvent
                 }
             }
         });
     }
     private void updateCentering() {
         if (enableCentering) {
-            if (maxwidth / M.getCols() < minSize) centering_start_x = start_x;
-            else centering_start_x = start_x+((this.maxwidth-(sizeofone*M.getCols()))/2);
-            if (maxheight / M.getRows() < minSize) centering_start_y = start_y;
-            else centering_start_y = start_y+((this.maxheight-(sizeofone*M.getRows()))/2);
+            if (maxwidth / MEM.getMaze().getCols() < minSize) centering_start_x = start_x;
+            else centering_start_x = start_x+((this.maxwidth-(sizeofone*MEM.getMaze().getCols()))/2);
+            if (maxheight / MEM.getMaze().getRows() < minSize) centering_start_y = start_y;
+            else centering_start_y = start_y+((this.maxheight-(sizeofone*MEM.getMaze().getRows()))/2);
         } else {
             centering_start_x = start_x;
             centering_start_y = start_y;
@@ -109,11 +124,11 @@ public class PodgladLabiryntu extends JPanel{
             maxwidth = tempintarr[0];maxheight = tempintarr[1];
         }
         this.maxwidth = maxwidth;this.maxheight = maxheight;
-        this.sizeofone = Integer.min(maxwidth / M.getCols(), maxheight / M.getRows());
+        this.sizeofone = Integer.min(maxwidth / MEM.getMaze().getCols(), maxheight / MEM.getMaze().getRows());
         if (this.sizeofone < minSize) this.sizeofone = minSize;
         // Trzeba zawsze aktualizować (centering_start_x, centering_start_y) przy zmianie wspołrzędnych początkowych lub wymiarów
         updateCentering();
-        setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols(), centering_start_y+sizeofone*M.getRows()));
+        setPreferredSize(new Dimension(centering_start_x+sizeofone*MEM.getMaze().getCols(), centering_start_y+sizeofone*MEM.getMaze().getRows()));
         //setPreferredSize(new Dimension(centering_start_x+sizeofone*M.getCols()+11, centering_start_y+sizeofone*M.getRows()+11)); // ?! Czy to przez ten ScrollPAIN?
     }
     @Override
@@ -141,11 +156,11 @@ public class PodgladLabiryntu extends JPanel{
         */
         // Losowy (zdegenerowany) labirynt z możliwością kliknięcia, aby zmienić kolor Pola na czerwony (w celu testowania)
         int x, y;
-        for (int r = 1;r <= M.getRows();r++) {
-            for (int c = 1;c <= M.getCols();c++) {
+        for (int r = 1;r <= MEM.getMaze().getRows();r++) {
+            for (int c = 1;c <= MEM.getMaze().getCols();c++) {
                 NumsToCoords(c, r);
                 x = tempintarr[0];y = tempintarr[1];
-                switch (M.getField(c, r).getType()) {
+                switch (MEM.getMaze().getField(c, r).getType()) {
                     case Field.WHITE_FIELD:
                         drawWhite(x, y);
                         break;
@@ -218,23 +233,27 @@ public class PodgladLabiryntu extends JPanel{
         if (randrange(0, 1) > 0) _tempmazetest[column][row] = 0;
         else _tempmazetest[column][row] = 1;
     }*/
+    @Deprecated
     private void _tempSetRandomField(int column, int row) {
-        _temp_setRandom(M.getField(column,row));
+        //_temp_setRandom(M.getField(column,row));
     }
+    @Deprecated
     private int _temp_randrange(int min, int max) {
         return rand.nextInt(max - min + 1) + min;
     }
+    @Deprecated
     public void _temp_setRandom(Field F) {
-        if (_temp_randrange(0, 1) > 0) M.setFieldType(F,Field.WHITE_FIELD);
-        else M.setFieldType(F,Field.BLACK_FIELD);
+        //if (_temp_randrange(0, 1) > 0) M.setFieldType(F,Field.WHITE_FIELD);
+        //else M.setFieldType(F,Field.BLACK_FIELD);
     }
+    @Deprecated
     private void _tempFillRandomMaze() {
         //_tempmazetest = new int[cols][rows];
-        for (int r = 1;r <= M.getRows();r++) {
+        /*for (int r = 1;r <= M.getRows();r++) {
             for (int c = 1;c <= M.getCols();c++) {
                 _tempSetRandomField(c, r);
             }
-        }
+        }*/
     }
     public int[] CoordsToNums(int x, int y) {
         // Zwraca parę (kolumna, wiersz) odpowiadającą współrzędnym Pola, do którego należy punkt (x,y)
@@ -249,7 +268,7 @@ public class PodgladLabiryntu extends JPanel{
         System.out.printf("fixedcoords: (%d, %d)\n", tempintarr[0], tempintarr[0]);
         tempintarr[0] /= sizeofone; tempintarr[1] /= sizeofone;
         tempintarr[0]++;tempintarr[1]++; // Pierwsze Pole ma współrzędne (1,1)
-        if (tempintarr[0] > M.getCols() || tempintarr[1] > M.getRows() || tempintarr[0] <= 0 || tempintarr[1] <= 0) return null;
+        if (tempintarr[0] > MEM.getMaze().getCols() || tempintarr[1] > MEM.getMaze().getRows() || tempintarr[0] <= 0 || tempintarr[1] <= 0) return null;
         return tempintarr;
         //return {};
         //return x/sizeofone;
@@ -263,7 +282,8 @@ public class PodgladLabiryntu extends JPanel{
     }
 
     public static void main(String [] args) {
-        JFrame frame = new JFrame();
+        // TODO - zaimportować Maze tylko dla tej nieużywanej metody
+        /*JFrame frame = new JFrame();
         //frame.add(new CustomCanvas(0,0,3840,2160,1920,1080));
         frame.setSize(1920,1080);
         int start_x, start_y, maxwidth, maxheight;
@@ -284,6 +304,6 @@ public class PodgladLabiryntu extends JPanel{
         frame.add(Scroll);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-    }
+    }*/
     
 }
