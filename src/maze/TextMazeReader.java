@@ -73,13 +73,13 @@ public class TextMazeReader extends MazeReader {
                         if (!CR) {
                             LF = true;
                             cur_row++;cur_column = 0;
-                        } else cur_column--; // jest później zwiększana, a checmy zignorować
+                        } else cur_column--; // jest później zwiększana, a chcemy zignorować
                         break;
                     case 13: // CR
                         if (!LF) {
                             CR = true;
                             cur_row++;cur_column = 0;
-                        } else cur_column--; // jest później zwiększana, a checmy zignorować
+                        } else cur_column--; // jest później zwiększana, a chcemy zignorować
                         break;
                     default:
                         System.out.println("Coś jest bardzo nie tak we wczytywaniu.");
@@ -124,7 +124,7 @@ public class TextMazeReader extends MazeReader {
                             //else if (max_cols != cur_column) throw new InputMismatchException();
                             else if (max_cols != cur_column) throw new InputMismatchException("Nie zgadza się liczba max_cols z cur_column: "+String.valueOf(max_cols)+" "+String.valueOf(cur_column));
                             cur_row++;cur_column = 0;
-                        } else cur_column--; // jest później zwiększana, a checmy zignorować
+                        } else cur_column--; // jest później zwiększana, a chcemy zignorować
                         break;
                     case 13: // CR
                         if (!LF) {
@@ -136,7 +136,7 @@ public class TextMazeReader extends MazeReader {
                                 throw new InputMismatchException(formatErrorMsg);
                             }
                             cur_row++;cur_column = 0;
-                        } else cur_column--; // jest później zwiększana, a checmy zignorować
+                        } else cur_column--; // jest później zwiększana, a chcemy zignorować
                         break;
                     default:
                         //throw new InputMismatchException();
