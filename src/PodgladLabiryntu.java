@@ -58,7 +58,7 @@ public class PodgladLabiryntu extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 //points.add(new Point(e.getX(), e.getY()));
-                //System.out.println(M.toString());
+                //System.out.println(M.toString()); // To generuje dużo spamu i alokuje dużo pamięci na nowe Stringi
                 if (CoordsToNums(e.getX(),e.getY()) == null) System.out.println("Współrzędne Pola są nieprawidłowe (nie kliknięto na Pole), pomijam.");
                 else {
                     int column, row;
@@ -67,7 +67,7 @@ public class PodgladLabiryntu extends JPanel {
                     //if (selectingEntrance) {
                     /*if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
                         if (M.getField(column, row).isEntranceField()) _tempSetRandomField(column, row);
-                        else M.setFieldType(M.getField(column, row),Field.ENTRANCE_FIELD); // ustawiamy na zielony
+                        else M.getField(column, row).setFieldType(Field.ENTRANCE_FIELD); // ustawiamy na zielony
                     } else {
                         if (M.getField(column, row).isExitField()) _tempSetRandomField(column, row);
                         else M.setFieldType(M.getField(column, row),Field.EXIT_FIELD); // ustawiamy na czerwony
@@ -237,8 +237,7 @@ public class PodgladLabiryntu extends JPanel {
     private void _tempSetRandomField(int column, int row) {
         //_temp_setRandom(M.getField(column,row));
     }
-    @Deprecated
-    private int _temp_randrange(int min, int max) {
+    /*private int _temp_randrange(int min, int max) {
         return rand.nextInt(max - min + 1) + min;
     }
     @Deprecated

@@ -8,9 +8,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import maze.MazeReader;
-import maze.TextMazeReader;
-
 import java.awt.*;
 //import java.util.concurrent.TimeUnit;
 import java.awt.event.*;
@@ -22,6 +19,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+//import maze.BinaryMazeReader;
 //import maze.Maze;
 //import maze.TextMazeReader;
 //import maze.MazeReader;
@@ -82,6 +80,7 @@ public final class Okno implements MazeEventListener {
         GUI.pack();
     }
 
+    @Override
     public void actionPerformed(MazeEvent event) {
         switch (event.getType()) {
             case SELECT_ALGORITHM:
@@ -142,7 +141,6 @@ public final class Okno implements MazeEventListener {
         //PL = new PodgladLabiryntu(26+200, 21, 1280-26-200, 820-21, 10, 10);
         //PL = new PodgladLabiryntu(0, 5, 1260-1-stdRozmPrzycisku.width, 761-1, 150, 50);
         
-        // Gdzieś jest POMYŁKA o 10 pikseli w wysokości i szerokości:
 
         //PL = new PodgladLabiryntu(0-PodgladLabiryntu.minSize, 0-PodgladLabiryntu.minSize, 1260-1-stdRozmPrzycisku.width, 761-1, M);
         PL = new PodgladLabiryntu(0, 0, 1260-1-stdRozmPrzycisku.width, 761-1, MEM);
@@ -163,7 +161,8 @@ public final class Okno implements MazeEventListener {
     private void zaktualizujRozmiarPodgladuLabiryntu() {
         System.out.printf("Okno ma wymiary (%s, %s)\n", String.valueOf(GUI.getBounds().width), String.valueOf(GUI.getBounds().height));
         // Aktualizujemyy ile miejsca może maksymalnie zająć Podgląd Labiryntu
-        PL.setMaxDimensions(GUI.getBounds().width-27-stdRozmPrzycisku.width,GUI.getBounds().height-37);
+        PL.setMaxDimensions(GUI.getBounds().width-37-stdRozmPrzycisku.width-PodgladLabiryntu.minSize,GUI.getBounds().height-37-25-PodgladLabiryntu.minSize);
+        //PL.setMaxDimensions(GUI.getBounds().width-27-stdRozmPrzycisku.width,GUI.getBounds().height-37);
         //PL.setMaxDimensions(GUI.getBounds().width-100-stdRozmPrzycisku.width,GUI.getBounds().height-180);
         //PL.setMaxDimensions(GUI.getBounds().width-100-stdRozmPrzycisku.width,GUI.getBounds().height-180);
         //PL.setMaxDimensions(GUI.getBounds().width-301-stdRozmPrzycisku.width,GUI.getBounds().height-167);
@@ -236,8 +235,15 @@ public final class Okno implements MazeEventListener {
         int r = wybor.showOpenDialog(GUI);
         if (r == JFileChooser.APPROVE_OPTION)
         {
-            /*System.out.println(wybor.getSelectedFile().getAbsolutePath());
-            MazeReader Reader = new TextMazeReader(M); // Wczytujemy do istniejącego labiryntu i go zastępujemy
+            /*
+            int dotIndex = wybor.getSelectedFile().getAbsolutePath().lastIndexOf('.');
+            String extension = (dotIndex > 0) ? wybor.getSelectedFile().getAbsolutePath().substring(dotIndex + 1) : "";
+            System.out.println(wybor.getSelectedFile().getAbsolutePath());
+            MazeReader Reader;
+            if(extension.equals("bin"))
+                Reader = new BinaryMazeReader(M);
+            else
+                Reader = new TextMazeReader(M);
             komunikaty.setText("Otwieranie pliku...");
             komunikaty.paintImmediately(komunikaty.getVisibleRect());
             if (Reader.open(wybor.getSelectedFile().getAbsolutePath())) {
@@ -262,7 +268,18 @@ public final class Okno implements MazeEventListener {
             } else {
                 komunikaty.setText("Nie udało się otworzyć pliku z labiryntem!");
             }*/
-            MEM.notifyListeners(new MazeEvent(MazeEvent.Type.LOAD_MAZE, new String[] {wybor.getSelectedFile().getAbsolutePath()}));
+            int dotIndex = wybor.getSelectedFile().getAbsolutePath().lastIndexOf('.');
+            String extension = (dotIndex > 0) ? wybor.getSelectedFile().getAbsolutePath().substring(dotIndex + 1) : "";
+            System.out.println(wybor.getSelectedFile().getAbsolutePath());
+            //MazeReader Reader;
+            MazeEvent.Type eventType;
+            if(extension.equals("bin"))
+                //Reader = new BinaryMazeReader(M);
+                eventType = MazeEvent.Type.LOAD_BINARY_MAZE;
+            else
+                //Reader = new TextMazeReader(M);
+                eventType = MazeEvent.Type.LOAD_TEXT_MAZE;
+            MEM.notifyListeners(new MazeEvent(eventType, new String[] {wybor.getSelectedFile().getAbsolutePath()}));
         }
         else
         {

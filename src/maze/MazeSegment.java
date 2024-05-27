@@ -1,15 +1,15 @@
 package maze;
 
-import graph.*;
+import graph_v2.TypicalUndirectedEdge;
 
-abstract class AbstractMazeSegment extends Edge<Field> {
-    protected AbstractMazeSegment(Field start, Field end) {
-        super(start,end);
-    }
-}
+public class MazeSegment extends TypicalUndirectedEdge {
 
-public class MazeSegment extends AbstractMazeSegment {
-    public MazeSegment(Field start, Field end) {
-        super(start,end);
+    protected MazeSegment() {
+        super();
     }
+
+    /*@Override
+    public String toString() {
+        return "test";
+    }*/
 }
