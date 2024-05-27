@@ -63,7 +63,7 @@ public class MazeEventManager {
         }
         return false;
     }
-    public void performAction(MazeEvent event) {
+    public void notifyListeners(MazeEvent event) {
         /*
          * Realizuje podane wydarzenie
          * i powiadamia swoich subskrybentów (nasłuchujących)
@@ -71,9 +71,9 @@ public class MazeEventManager {
          * wysyła powiadomienie PRZED i PO realizacji wydarzenia
          * może wysyłać powiadomienia o statusie wydarzenia również W TRAKCIE realizacji (np. w przypadku wczytywania labiryntu)
          */
-        notifyListeners(event); // przed
+        notifyListenersInProgress(event); // przed
         performingAction(event); // w trakcie
-        notifyListeners(event); // po
+        notifyListenersInProgress(event); // po
     }
     private void performingAction(MazeEvent event) {
         event.setStatus(MazeEvent.Status.PROCESSING);
@@ -102,7 +102,7 @@ public class MazeEventManager {
                 throw new UnsupportedOperationException("MazeEventManager nie potrafi obsłużyć wydarzeń podanego typu: "+event.getType());
         }
     }
-    public void notifyListeners(MazeEvent event) {
+    private void notifyListenersInProgress(MazeEvent event) {
         for (MazeEventListener listener : listeners) {
             listener.actionPerformed(event);
         }
