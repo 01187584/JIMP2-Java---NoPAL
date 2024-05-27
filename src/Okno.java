@@ -19,6 +19,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import maze.BinaryMazeReader;
 import maze.Maze;
 import maze.TextMazeReader;
 import maze.MazeReader;
@@ -179,7 +180,14 @@ public final class Okno {
         if (r == JFileChooser.APPROVE_OPTION)
         {
             System.out.println(wybor.getSelectedFile().getAbsolutePath());
-            MazeReader Reader = new TextMazeReader(M); // Wczytujemy do istniejącego labiryntu i go zastępujemy
+            int dotIndex = wybor.getSelectedFile().getAbsolutePath().lastIndexOf('.');
+            String extension = (dotIndex > 0) ? wybor.getSelectedFile().getAbsolutePath().substring(dotIndex + 1) : "";
+            System.out.println(wybor.getSelectedFile().getAbsolutePath());
+            MazeReader Reader;
+            if(extension.equals("bin"))
+                Reader = new BinaryMazeReader(M);
+            else
+                Reader = new TextMazeReader(M);
             komunikaty.setText("Otwieranie pliku...");
             komunikaty.paintImmediately(komunikaty.getVisibleRect());
             if (Reader.open(wybor.getSelectedFile().getAbsolutePath())) {
