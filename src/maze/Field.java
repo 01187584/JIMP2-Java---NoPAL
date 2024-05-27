@@ -40,11 +40,14 @@ public class Field extends SimpleVertex {
         super(M);
         this.type = type;
     }
-    public void setRandomType() {
-        if (randrange(0, 1) > 0) setFieldType(WHITE_FIELD);
-        else setFieldType(BLACK_FIELD);
+    public static int getRandomType() {
+        if (randrange(0, 1) > 0) return WHITE_FIELD;
+        else return BLACK_FIELD;
     }
-    private int randrange(int min, int max) {
+    public void setRandomType() {
+        setFieldType(getRandomType());
+    }
+    private static int randrange(int min, int max) {
         return rand.nextInt(max - min + 1) + min;
     }
     private Maze getRefMaze() {

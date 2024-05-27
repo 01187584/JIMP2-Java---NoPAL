@@ -1,13 +1,7 @@
-import java.io.File;
 import javax.swing.*;
 import java.awt.*;
 //import java.util.concurrent.TimeUnit;
 import java.awt.event.*;
-import java.io.*; // printf
-
-import java.awt.*;
-import java.util.List;
-import java.util.*;
 
 import maze.Field;
 //import maze.Maze;
@@ -25,7 +19,6 @@ public class PodgladLabiryntu extends JPanel {
     private int maxwidth, maxheight;
     private Graphics G;
     private int[] tempintarr = new int[2];
-    private static final Random rand = new Random();
     //public boolean selectingEntrance = true; Niepotrzebne, rozróżniamy po kliknięciu LPM lub PPM
 
     //private int[][] _tempmazetest; // _tempmazetest[kolumna][wiersz] = rodzajPola
@@ -227,33 +220,7 @@ public class PodgladLabiryntu extends JPanel {
         }
         return tempintarr;
     }
-    /*private void _tempSetRandomField(int column, int row) {
-        //hasCanvasChanged = true;
-        //System.out.println("TRUE 4");
-        if (randrange(0, 1) > 0) _tempmazetest[column][row] = 0;
-        else _tempmazetest[column][row] = 1;
-    }*/
-    @Deprecated
-    private void _tempSetRandomField(int column, int row) {
-        //_temp_setRandom(M.getField(column,row));
-    }
-    /*private int _temp_randrange(int min, int max) {
-        return rand.nextInt(max - min + 1) + min;
-    }
-    @Deprecated
-    public void _temp_setRandom(Field F) {
-        //if (_temp_randrange(0, 1) > 0) M.setFieldType(F,Field.WHITE_FIELD);
-        //else M.setFieldType(F,Field.BLACK_FIELD);
-    }
-    @Deprecated
-    private void _tempFillRandomMaze() {
-        //_tempmazetest = new int[cols][rows];
-        /*for (int r = 1;r <= M.getRows();r++) {
-            for (int c = 1;c <= M.getCols();c++) {
-                _tempSetRandomField(c, r);
-            }
-        }*/
-    }
+
     public int[] CoordsToNums(int x, int y) {
         // Zwraca parę (kolumna, wiersz) odpowiadającą współrzędnym Pola, do którego należy punkt (x,y)
         // Współrzędne Pola są liczone od 1
@@ -304,5 +271,5 @@ public class PodgladLabiryntu extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }*/
-    
+    }
 }

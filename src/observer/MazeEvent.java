@@ -1,6 +1,9 @@
 package observer;
 
 public class MazeEvent {
+    // TODO: dodać więcej rodzajów wydarzeń do obsługi zapisu plików - binarnego i tekstowego
+    // TODO: może dodać wydarzenie do obsługiwania wypisywania listy kroków
+    // TODO: może zamienić LOAD_TEXT_MAZE i LOAD_BINARY_MAZE na LOAD_MAZE z dodatkowym argumentem
     /*
      * //////////GET_MAZE_STRING  - bez argumentów
      * SELECT_ALGORITHM - int numerAlgorytmuWMazeEventManager
@@ -12,12 +15,12 @@ public class MazeEvent {
      */
     public static enum Type {
         //GET_MAZE_STRING,  // zwraca stringData[] = {Maze.toString() dla Maze w odpowiednim MazeEventManagerze}
-        SELECT_ALGORITHM,
-        SOLVE_MAZE,
-        LOAD_MAZE,        // po sprawdzeniu formatu zwraca intData[] = {liczbaKolumnLabiryntu, liczbaWierszyLabiryntu}
-        LOAD_TEXT_MAZE,   // po sprawdzeniu formatu zwraca intData[] = {liczbaKolumnLabiryntu, liczbaWierszyLabiryntu}
-        LOAD_BINARY_MAZE, // po sprawdzeniu formatu zwraca intData[] = {liczbaKolumnLabiryntu, liczbaWierszyLabiryntu}
-        SET_FIELD_TYPE
+        SELECT_ALGORITHM, // TODO
+        SOLVE_MAZE,       // TODO
+        LOAD_MAZE,        // po sprawdzeniu formatu wydarzenia zwraca intData[] = {liczbaKolumnLabiryntu, liczbaWierszyLabiryntu}
+        LOAD_TEXT_MAZE,   // po sprawdzeniu formatu wydarzenia zwraca intData[] = {liczbaKolumnLabiryntu, liczbaWierszyLabiryntu}
+        LOAD_BINARY_MAZE, // po sprawdzeniu formatu wydarzenia zwraca intData[] = {liczbaKolumnLabiryntu, liczbaWierszyLabiryntu}
+        SET_FIELD_TYPE    // nic nie zwraca
     }
     // Pomysł statusu wydarzenia oparty jest na kodach odpowiedzi HTTP.
     public static enum Status {

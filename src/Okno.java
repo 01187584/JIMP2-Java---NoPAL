@@ -2,19 +2,12 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
-import java.io.File;
-import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import java.awt.*;
 //import java.util.concurrent.TimeUnit;
 import java.awt.event.*;
-import java.io.*; // printf
-
-import java.util.List;
-import java.util.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +27,7 @@ public final class Okno implements MazeEventListener {
     private final JPanel tenPanel;
     private final Dimension stdRozmPrzycisku = new Dimension(230, 120);
     private PodgladLabiryntu PL;
+    private JScrollPane ScrollPL;
     JTextPane komunikaty; // Do komunikatów
     public Okno(MazeEventManager MEM) {
         this.MEM = MEM;
@@ -84,53 +78,73 @@ public final class Okno implements MazeEventListener {
     public void actionPerformed(MazeEvent event) {
         switch (event.getType()) {
             case SELECT_ALGORITHM:
-                // TODO: dodać obsługę wybierania algorytmu
+                handle_SELECT_ALGORITHM(event);
                 break;
             case SOLVE_MAZE:
+                handle_SOLVE_MAZE(event);
                 break;
             case LOAD_TEXT_MAZE: // celowo bez break
             case LOAD_BINARY_MAZE:
             case LOAD_MAZE:
-                switch (event.getStatus()) {
-                    case START:
-                        komunikaty.setText("Otwieranie pliku...");
-                    case LOAD_MAZE_OPENING_ERROR:
-                        komunikaty.setText("Wczytywanie labiryntu...");
-                        break;
-                    case LOAD_MAZE_FILE_OPENED:
-                        komunikaty.setText("Sprawdzanie formatu pliku...");
-                        break;
-                    case LOAD_MAZE_FORMAT_ERROR:
-                        komunikaty.setText(event.getStatusMessage());
-                        break;
-                    case LOAD_MAZE_FORMAT_VALIDATED:
-                        komunikaty.setText(event.getStatusMessage());
-                        break;
-                    case OK:
-                        komunikaty.setText("Rysowanie labiryntu...");
-                        komunikaty.paintImmediately(komunikaty.getVisibleRect());
-                        PL.repaint();
-                        komunikaty.setText("Udało się wczytać labirynt.");
-                        break;
-                }
-                komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                handle_LOAD_MAZE(event);
                 break;
             case SET_FIELD_TYPE:
-                // TODO: obsłużyć błąd - można podać nieprawidłowy typ Pola
-                switch (event.getStatus()) {
-                    case SET_FIELD_TYPE_INVALID_COORDS:
-                        komunikaty.setText(event.getStatusMessage());
-                        break;
-                    case OK:
-                        // TODO
-                        komunikaty.setText("Ustawiono Pole ### na ###");
-                        PL.repaint();
-                        break;
-                }
+                handle_SET_FIELD_TYPE(event);
                 break;
         }
     }
-
+    private void handle_SELECT_ALGORITHM(MazeEvent event) {
+        // TODO: dodać obsługę wybierania algorytmu
+    }
+    private void handle_SOLVE_MAZE(MazeEvent event) {
+        // TODO: dodać obsługę rozwiązywania labiryntu
+    }
+    private void handle_LOAD_MAZE(MazeEvent event) {
+        switch (event.getStatus()) {
+            case START:
+                komunikaty.setText("Otwieranie pliku...");
+            case LOAD_MAZE_OPENING_ERROR:
+                komunikaty.setText("Wczytywanie labiryntu...");
+                break;
+            case LOAD_MAZE_FILE_OPENED:
+                komunikaty.setText("Sprawdzanie formatu pliku...");
+                break;
+            case LOAD_MAZE_FORMAT_ERROR:
+                komunikaty.setText(event.getStatusMessage());
+                break;
+            case LOAD_MAZE_FORMAT_VALIDATED:
+                komunikaty.setText(event.getStatusMessage());
+                break;
+            case OK:
+                komunikaty.setText("Rysowanie labiryntu...");
+                komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                zaktualizujRozmiarPodgladuLabiryntu();
+                // *Chyba* może się okazać, że labirynt zostanie narysowany 2 razy
+                ScrollPL.revalidate();
+                PL.repaint();
+                komunikaty.setText("Udało się wczytać labirynt.");
+                break;
+            default:
+                break;
+        }
+        komunikaty.paintImmediately(komunikaty.getVisibleRect());
+    }
+    private void handle_SET_FIELD_TYPE(MazeEvent event) {
+        // TODO: obsłużyć błąd - można podać nieprawidłowy typ Pola
+        switch (event.getStatus()) {
+            case SET_FIELD_TYPE_INVALID_COORDS:
+                komunikaty.setText(event.getStatusMessage());
+                break;
+            case OK:
+                // TODO
+                komunikaty.setText("Ustawiono Pole ### na ###");
+                PL.repaint();
+                break;
+            default:
+                break;
+        }
+        return;
+    }
     private void dodajPodgladLabiryntu()
     {
         /*JPanel widokLabiryntu = new JPanel();
@@ -152,7 +166,7 @@ public final class Okno implements MazeEventListener {
                 zaktualizujRozmiarPodgladuLabiryntu();
             }
         });
-        JScrollPane ScrollPL = new JScrollPane(PL);
+        ScrollPL = new JScrollPane(PL);
         //PL.setSize(1280-26-200,820-21);
         //PL.setSize(1054-500,799);
         GUI.add(ScrollPL, BorderLayout.CENTER);
@@ -360,7 +374,6 @@ public final class Okno implements MazeEventListener {
         komunikaty.setEditable(false);
         komunikaty.setPreferredSize(stdRozmPrzycisku);
         tenPanel.add(komunikaty);
-
     }
 
     private void dodajPrzyciski()

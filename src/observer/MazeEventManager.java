@@ -1,12 +1,12 @@
 package observer;
 
 import java.util.HashSet;
-import java.util.InputMismatchException;
 
 import maze.Maze;
 import maze.MazeReader;
 import maze.TextMazeReader;
 import maze.BinaryMazeReader;
+import algorithm.*;
 
 // Zarządza labiryntem (swoim obiektem klasy Maze)
 // Zarządza obiektami klas dziedziczących po MazeReader
@@ -14,9 +14,9 @@ import maze.BinaryMazeReader;
 // Wysyła wydarzenia PO ich realizacji (bądź próbie realizacji)
 public class MazeEventManager {
     private final Maze M;
-    private final MazeReader[] MazeReaders;
     private final TextMazeReader TMR;
     private final BinaryMazeReader BMR;
+    private final MazeReader[] MazeReaders;
     private HashSet<MazeEventListener> listeners;
 
     public MazeEventManager() {
@@ -24,10 +24,10 @@ public class MazeEventManager {
     }
     public MazeEventManager(Maze M) {
         this.M = M;
+        listeners = new HashSet<MazeEventListener>();
         TMR = new TextMazeReader(M);
         BMR = new BinaryMazeReader(M);
-        MazeReaders = new MazeReader[2];
-        MazeReaders[0] = TMR;MazeReaders[1] = BMR;
+        MazeReaders = new MazeReader[] {TMR, BMR};
     }
     public void addEventListener(MazeEventListener listener) {
         listeners.add(listener);
@@ -38,18 +38,18 @@ public class MazeEventManager {
     private boolean tryLoadingMaze(MazeEvent event, MazeReader MR, boolean notifyProgress) {
         if (!MR.open(event.getStringData()[0])) {
             event.setStatus(MazeEvent.Status.LOAD_MAZE_OPENING_ERROR);
-            if (notifyProgress) notifyListeners(event);
+            if (notifyProgress) notifyListenersInProgress(event);
             return false;
         }
         event.setStatus(MazeEvent.Status.LOAD_MAZE_FILE_OPENED);
-        if (notifyProgress) notifyListeners(event);
+        if (notifyProgress) notifyListenersInProgress(event);
         if (!MR.validateFormat()) {
             event.setStatus(MazeEvent.Status.LOAD_MAZE_FORMAT_ERROR, MR.getFormatErrorMsg());
-            if (notifyProgress) notifyListeners(event);
+            if (notifyProgress) notifyListenersInProgress(event);
             return false;
         }
         event.setStatus(MazeEvent.Status.LOAD_MAZE_FORMAT_VALIDATED);
-        notifyListeners(event); // Jeśli format jest prawidłowy, to zawsze powiadom
+        notifyListenersInProgress(event); // Jeśli format jest prawidłowy, to zawsze powiadom
         MR.read();
         MR.close();
         event.setStatus(MazeEvent.Status.OK);
@@ -86,10 +86,13 @@ public class MazeEventManager {
                 break;
             case MazeEvent.Type.LOAD_MAZE:
                 tryLoadingMaze(event);
+                break;
             case MazeEvent.Type.LOAD_TEXT_MAZE:
                 tryLoadingMaze(event, TMR, true);
+                break;
             case MazeEvent.Type.LOAD_BINARY_MAZE:
                 tryLoadingMaze(event, BMR, true);
+                break;
             case MazeEvent.Type.SET_FIELD_TYPE:
                 try {
                     // TODO: obsłużyć błąd - można podać nieprawidłowy typ Pola
@@ -98,6 +101,7 @@ public class MazeEventManager {
                 } catch (Exception e) {
                     event.setStatus(MazeEvent.Status.SET_FIELD_TYPE_INVALID_COORDS);
                 }
+                break;
             default:
                 throw new UnsupportedOperationException("MazeEventManager nie potrafi obsłużyć wydarzeń podanego typu: "+event.getType());
         }

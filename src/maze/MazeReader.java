@@ -41,6 +41,7 @@ public abstract class MazeReader {
         wasFileOpened = false;
         formatValidated = false;
         formatIsValid = false;
+        wasFileRead = false;
         columns = 0;
         rows = 0;
     }
