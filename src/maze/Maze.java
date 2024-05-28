@@ -43,6 +43,7 @@ import graph_v2.*;
 
 //public class Maze extends AbstractMaze {
 public class Maze extends TypicalUndirectedGraph {
+    // TODO - zmienić checkCorrectUse na CHECK_CORRECT_USE, bo jest final
     private final static boolean checkCorrectUse = true; // Sprawdzamy, czy używamy labiryntu poprawnie
     private int num_cols;
     private int num_rows;

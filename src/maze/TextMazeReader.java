@@ -3,7 +3,9 @@ package maze;
 import java.io.FileReader;
 import java.util.InputMismatchException;
 
+// TODO - ustandaryzować komunikaty, przenieść je do MazeReader, nie wypisawać od razu na ekran (tym zajmie się Terminal)
 public class TextMazeReader extends MazeReader {
+    // TODO - przenieść poniższe 4 do odpowiedniego enum w Field i używać ich zamiast tych 4
     public static final char WHITE_FIELD = ' ';
     public static final char BLACK_FIELD = 'X';
     public static final char ENTRANCE_FIELD = 'P';

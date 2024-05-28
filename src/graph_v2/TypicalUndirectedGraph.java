@@ -11,6 +11,7 @@ public class TypicalUndirectedGraph implements Graph {
     private int LastVertexNum = 0;
     HashMap<Integer, Vertex> V;
     Edges E;
+    // TODO - zmienić checkCorrectUse na CHECK_CORRECT_USE, bo to final
     private static final boolean checkCorrectUse = true;
     private HashSet<Vertex> StartV;
     private HashSet<Vertex> EndV;

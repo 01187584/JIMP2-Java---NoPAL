@@ -1,6 +1,7 @@
 package maze;
 
 public class MazeTester {
+    // TODO - przekształcić to na test jednostkowy i może przenieść do Maze
     public static void main(String [] args) {
         Maze TestMaze = new Maze(3,3);
         //TestMaze.addVertex();TestMaze.addVertex();

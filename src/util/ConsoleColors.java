@@ -2,6 +2,7 @@ package util;
 
 // https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
 
+// TODO - poprawić te nazwy, aby były w odpowiednich enumach np. zamiast ConsoleColors.BLACK_BRIGHT to ConsoleColors.Bright.BLACK
 public class ConsoleColors {
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset

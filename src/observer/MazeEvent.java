@@ -1,6 +1,8 @@
 package observer;
 
 public class MazeEvent {
+    // TODO: zapewnić, aby KAŻDE MazeEvent NIE MOGŁO istnieć bez swojego MazeEventManagera (kompozycja)
+    // TODO: może zamienić MazeEvent tak, aby każdy typ MazeEvent-u był osobną klasą która implementuje interfejs / dziedziczy po klasie abstrakcyjnej MazeEvent
     // TODO: dodać więcej rodzajów wydarzeń do obsługi zapisu plików - binarnego i tekstowego
     // TODO: może dodać wydarzenie do obsługiwania wypisywania listy kroków
     // TODO: może zamienić LOAD_TEXT_MAZE i LOAD_BINARY_MAZE na LOAD_MAZE z dodatkowym argumentem

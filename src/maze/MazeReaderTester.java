@@ -1,6 +1,7 @@
 package maze;
 
 public class MazeReaderTester {
+    // TODO - przekształcić to na test jednostkowy i może przenieść do TextMazeReader
     public static void main(String[] args) {
         MazeReader Reader = new TextMazeReader();
         Reader.open("maze-test.txt");

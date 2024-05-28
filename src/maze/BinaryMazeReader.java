@@ -2,6 +2,7 @@ package maze;
 import java.io.*;
 import java.nio.*;
 
+// TODO - ustandaryzować komunikaty, przenieść je do MazeReader, nie wypisawać od razu na ekran (tym zajmie się Terminal)
 public class BinaryMazeReader extends MazeReader {
 
     private FileInputStream file;
@@ -182,6 +183,7 @@ public class BinaryMazeReader extends MazeReader {
     }
 
     public static class InvalidFileFormatException extends IOException {
+        // TODO - przenieść InvalidFileFormatException do MazeReader, zmienić TextMazeReader, aby tego używał
         public InvalidFileFormatException(String message) {
             super(message);
         }

@@ -23,6 +23,8 @@ public class PodgladLabiryntu extends JPanel {
 
     //private int[][] _tempmazetest; // _tempmazetest[kolumna][wiersz] = rodzajPola
 
+    // TODO - zmienić na static shouldFixCoords, shouldFixFlatLaf i enableCentering
+    // TODO - zmienić na private shouldFixCoords i shouldFixFlatLaf
     public final boolean shouldFixCoords = false; // Czy automatycznie poprawia podane wymiary (maxwidth, maxheight)
     // oraz współrzędne kliknięte myszką o (-22, -56), aby dobrze się wyświetlało i klikało
     public final boolean shouldFixFlatLaf = false; // Jak powyżej dla FlatLafa, niezależne od powyższego    
@@ -66,7 +68,6 @@ public class PodgladLabiryntu extends JPanel {
                         else M.setFieldType(M.getField(column, row),Field.EXIT_FIELD); // ustawiamy na czerwony
                     }*/
                     int[] intData = new int[] {column, row, 0};
-                    // TODO: Field.getRandomType()
                     MazeEvent ME = new MazeEvent(MazeEvent.Type.SET_FIELD_TYPE, intData);
                     if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
                         if (MEM.getMaze().getField(column, row).isEntranceField()) intData[2] = Field.getRandomType();
@@ -180,6 +181,7 @@ public class PodgladLabiryntu extends JPanel {
         if (randrange(0, 1) > 0) drawWhite(x, y);
         else drawBlack(x, y);
     }*/
+    // TODO - przenieść drawWhite i drawBlack do klasy Field jako draw() - dzięki temu Pole stanie się odpowiedzialne za sposób rysowania go
     public void drawWhite(int x, int y) {
         //hasCanvasChanged = true;
         //System.out.println("TRUE 1");

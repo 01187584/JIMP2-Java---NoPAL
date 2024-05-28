@@ -26,10 +26,13 @@ import graph_v2.SimpleVertex;
 
 public class Field extends SimpleVertex {
     private int type; // Nie ustawiać manualnie atrybutu type, tylko użyć Maze.setFieldType
+    // TODO - może przenieść poniższe 4 do odpowiedniego enum, odpowiednio zaktualizować MazeEvent i inne
+    // TODO - alternatywnie ZAMIAST powyższego: stworzyć nowe klasy WhiteField, BlackField, EntraceField i ExitField dziedziczące po klasie abstrakycjnej Field, aby mogły być niezależnie modyfikowane
     public static final int WHITE_FIELD = 0;
     public static final int BLACK_FIELD = 1;
     public static final int ENTRANCE_FIELD = 2;
     public static final int EXIT_FIELD = 3;
+    // TODO - zmienić rand na RAND, bo jest final
     private static final Random rand = new Random();
     private static HashSet<Vertex> AdjacentVertices = new HashSet<Vertex>(4);
     private static int tempintarr[]; //= new int[2];
