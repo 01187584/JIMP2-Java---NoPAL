@@ -102,7 +102,7 @@ public class Field extends SimpleVertex {
             case BLACK_FIELD:
                 return ConsoleColors.BLACK_BACKGROUND+str+ConsoleColors.RESET;
             case ENTRANCE_FIELD:
-                return ConsoleColors.GREEN_BACKGROUND+str+ConsoleColors.RESET;
+                return ConsoleColors.GREEN_BACKGROUND_BRIGHT+str+ConsoleColors.RESET;
             case EXIT_FIELD:
                 return ConsoleColors.RED_BACKGROUND+str+ConsoleColors.RESET;
             default:
