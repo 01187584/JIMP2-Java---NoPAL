@@ -18,6 +18,7 @@ import java.io.IOException;
 //import maze.MazeReader;
 import observer.MazeEventManager;
 import observer.MazeEventListener;
+import observer.LoadMazeEvent;
 import observer.MazeEvent;
 
 public final class Okno implements MazeEventListener {
@@ -83,11 +84,11 @@ public final class Okno implements MazeEventListener {
             case SOLVE_MAZE:
                 handle_SOLVE_MAZE(event);
                 break;
-            case LOAD_TEXT_MAZE: // celowo bez break
-            case LOAD_BINARY_MAZE:
             case LOAD_MAZE:
                 handle_LOAD_MAZE(event);
                 break;
+            case SAVE_MAZE:
+                handle_SAVE_MAZE(event);
             case SET_FIELD_TYPE:
                 handle_SET_FIELD_TYPE(event);
                 break;
@@ -101,23 +102,26 @@ public final class Okno implements MazeEventListener {
     }
     private void handle_LOAD_MAZE(MazeEvent event) {
         switch (event.getStatus()) {
-            case START:
+            case "START":
                 komunikaty.setText("Otwieranie pliku...");
-            case LOAD_MAZE_OPENING_ERROR:
-                komunikaty.setText("Wczytywanie labiryntu...");
+            case "LOAD_MAZE_UNRECOGNISED_FILE_TYPE":
+                komunikaty.setText(event.getStatusMessage());
+            case "LOAD_MAZE_OPENING_ERROR":
+                //komunikaty.setText("Wczytywanie labiryntu...");
+                komunikaty.setText(event.getStatusMessage());
                 break;
-            case LOAD_MAZE_FILE_OPENED:
+            case "LOAD_MAZE_FILE_OPENED":
                 komunikaty.setText("Sprawdzanie formatu pliku...");
                 break;
-            case LOAD_MAZE_FORMAT_ERROR:
+            case "LOAD_MAZE_FORMAT_ERROR":
                 komunikaty.setText(event.getStatusMessage());
                 break;
-            case LOAD_MAZE_FORMAT_VALIDATED:
+            case "LOAD_MAZE_FORMAT_VALIDATED":
                 komunikaty.setText(event.getStatusMessage());
                 break;
-            case OK:
+            case "OK":
                 komunikaty.setText("Rysowanie labiryntu...");
-                komunikaty.paintImmediately(komunikaty.getVisibleRect());
+                //komunikaty.paintImmediately(komunikaty.getVisibleRect());
                 zaktualizujRozmiarPodgladuLabiryntu();
                 // *Chyba* może się okazać, że labirynt zostanie narysowany 2 razy
                 ScrollPL.revalidate();
@@ -125,19 +129,27 @@ public final class Okno implements MazeEventListener {
                 komunikaty.setText("Udało się wczytać labirynt."); // TODO - poprawić ten komunikat np. przy użyciu wydarzenia wysłanego do obserwatora MazeEventManager przez PodgladLabiryntu, które zostałoby tu obsłużone - obecnie ze względu na asynchroniczność Swinga wyświetli się to w złym momencie (przed narysowaniem)
                 break;
             default:
+                ///komunikaty.setText(komunikaty.getText());
                 break;
         }
-        komunikaty.paintImmediately(komunikaty.getVisibleRect());
+        // TODO: naprawić losowy generator błędów w następnej linijce! (sprawdź polecenie "wczytaj .\maze.bin bin")
+        //komunikaty.paintImmediately(komunikaty.getVisibleRect());
+    }
+    private void handle_SAVE_MAZE(MazeEvent event) {
+        // TODO
     }
     private void handle_SET_FIELD_TYPE(MazeEvent event) {
         // TODO: obsłużyć błąd - można podać nieprawidłowy typ Pola
         switch (event.getStatus()) {
-            case SET_FIELD_TYPE_INVALID_COORDS:
+            case "SET_FIELD_TYPE_INVALID_COORDS":
                 komunikaty.setText(event.getStatusMessage());
                 break;
-            case OK:
-                // TODO
-                komunikaty.setText("Ustawiono Pole ### na ###");
+            case "SET_FIELD_TYPE_INVALID_FIELD_TYPE":
+                komunikaty.setText(event.getStatusMessage());
+                break;
+            case "OK":
+                //komunikaty.setText("Ustawiono Pole ### na ###");
+                komunikaty.setText(event.getStatusMessage());
                 PL.repaint();
                 break;
             default:
@@ -173,7 +185,7 @@ public final class Okno implements MazeEventListener {
     }
 
     private void zaktualizujRozmiarPodgladuLabiryntu() {
-        System.out.printf("Okno ma wymiary (%s, %s)\n", String.valueOf(GUI.getBounds().width), String.valueOf(GUI.getBounds().height));
+        //System.out.printf("Okno ma wymiary (%s, %s)\n", String.valueOf(GUI.getBounds().width), String.valueOf(GUI.getBounds().height));
         // Aktualizujemyy ile miejsca może maksymalnie zająć Podgląd Labiryntu
         PL.setMaxDimensions(GUI.getBounds().width-37-stdRozmPrzycisku.width-PodgladLabiryntu.minSize,GUI.getBounds().height-37-25-PodgladLabiryntu.minSize);
         //PL.setMaxDimensions(GUI.getBounds().width-27-stdRozmPrzycisku.width,GUI.getBounds().height-37);
@@ -284,20 +296,21 @@ public final class Okno implements MazeEventListener {
             }*/
             int dotIndex = wybor.getSelectedFile().getAbsolutePath().lastIndexOf('.');
             String extension = (dotIndex > 0) ? wybor.getSelectedFile().getAbsolutePath().substring(dotIndex + 1) : "";
-            System.out.println(wybor.getSelectedFile().getAbsolutePath());
+            //System.out.println(wybor.getSelectedFile().getAbsolutePath());
             //MazeReader Reader;
-            MazeEvent.Type eventType;
-            if(extension.equals("bin"))
+            //MazeEvent.Type eventType;
+            /*if(extension.equals("bin"))
                 //Reader = new BinaryMazeReader(M);
                 eventType = MazeEvent.Type.LOAD_BINARY_MAZE;
             else
                 //Reader = new TextMazeReader(M);
-                eventType = MazeEvent.Type.LOAD_TEXT_MAZE;
-            MEM.notifyListeners(new MazeEvent(eventType, new String[] {wybor.getSelectedFile().getAbsolutePath()}));
+                eventType = MazeEvent.Type.LOAD_TEXT_MAZE;*/
+            //MEM.notifyListeners(new MazeEvent(eventType, new String[] {wybor.getSelectedFile().getAbsolutePath()}));
+            MEM.notifyListeners(new LoadMazeEvent(MEM, wybor.getSelectedFile().getAbsolutePath(), extension));
         }
         else
         {
-            System.out.println("Brak");
+            //System.out.println("Brak");
         }
     }
     private void poleZapisu(String tekst)

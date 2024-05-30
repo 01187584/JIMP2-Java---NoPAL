@@ -2,7 +2,7 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.*;
 
-import observer.MazeEvent;
+import observer.LoadMazeEvent;
 import observer.MazeEventManager;
 
 public class Main {
@@ -14,11 +14,11 @@ public class Main {
         }
         MazeEventManager MEM = new MazeEventManager();
         //System.out.println("Hello world!");
-        new Terminal(MEM);
         Okno OPAL = new Okno(MEM);
         // Wczytanie przykładowego labiryntu
-        MEM.notifyListeners(new MazeEvent(MazeEvent.Type.LOAD_MAZE, new String[] {"maze-test.txt"}));
+        MEM.notifyListeners(new LoadMazeEvent(MEM, "maze-test.txt"));
 
         OPAL.wczytajGUI();
+        new Terminal(MEM);
     }
 }

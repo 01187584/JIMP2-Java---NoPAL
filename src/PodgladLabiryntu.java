@@ -7,6 +7,7 @@ import maze.Field;
 //import maze.Maze;
 import observer.MazeEvent;
 import observer.MazeEventManager;
+import observer.SetFieldTypeEvent;
 
 public class PodgladLabiryntu extends JPanel {
     //private Random rand;
@@ -54,11 +55,11 @@ public class PodgladLabiryntu extends JPanel {
             public void mousePressed(MouseEvent e) {
                 //points.add(new Point(e.getX(), e.getY()));
                 //System.out.println(M.toString()); // To generuje dużo spamu i alokuje dużo pamięci na nowe Stringi
-                if (CoordsToNums(e.getX(),e.getY()) == null) System.out.println("Współrzędne Pola są nieprawidłowe (nie kliknięto na Pole), pomijam.");
+                if (CoordsToNums(e.getX(),e.getY()) == null); //System.out.println("Współrzędne Pola są nieprawidłowe (nie kliknięto na Pole), pomijam.");
                 else {
                     int column, row;
                     column = tempintarr[0];row = tempintarr[1];
-                    System.out.printf("CoordsToNums: (%d, %d)\n", column, row);
+                    //System.out.printf("CoordsToNums: (%d, %d)\n", column, row);
                     //if (selectingEntrance) {
                     /*if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
                         if (M.getField(column, row).isEntranceField()) _tempSetRandomField(column, row);
@@ -67,16 +68,32 @@ public class PodgladLabiryntu extends JPanel {
                         if (M.getField(column, row).isExitField()) _tempSetRandomField(column, row);
                         else M.setFieldType(M.getField(column, row),Field.EXIT_FIELD); // ustawiamy na czerwony
                     }*/
-                    int[] intData = new int[] {column, row, 0};
-                    MazeEvent ME = new MazeEvent(MazeEvent.Type.SET_FIELD_TYPE, intData);
+                    //int[] intData = new int[] {column, row, 0};
+                    int fieldType;
                     if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-                        if (MEM.getMaze().getField(column, row).isEntranceField()) intData[2] = Field.getRandomType();
-                        else intData[2] = Field.ENTRANCE_FIELD; // ustawiamy na zielony
+                        if (MEM.getMaze().getField(column, row).isEntranceField()) fieldType = Field.getRandomType();
+                        else fieldType = Field.ENTRANCE_FIELD; // ustawiamy na zielony
                     } else {
-                        if (MEM.getMaze().getField(column, row).isExitField()) intData[2] = Field.getRandomType();
-                        else intData[2] = Field.EXIT_FIELD; // ustawiamy na czerwony
+                        if (MEM.getMaze().getField(column, row).isExitField()) fieldType = Field.getRandomType();
+                        else fieldType = Field.EXIT_FIELD; // ustawiamy na czerwony
                     }
-                    MEM.notifyListeners(ME);
+                    // TODO - do poprawy:
+                    char fT = ' ';
+                    switch (fieldType) {
+                        case Field.WHITE_FIELD:
+                            fT = ' ';
+                            break;
+                        case Field.BLACK_FIELD:
+                            fT = 'X';
+                            break;
+                        case Field.ENTRANCE_FIELD:
+                            fT = 'P';
+                            break;
+                        case Field.EXIT_FIELD:
+                            fT = 'K';
+                            break;
+                    }
+                    MEM.notifyListeners(new SetFieldTypeEvent(MEM, column, row, fT));
                     
                     //NumsToCoords(column, row);
                     //System.out.printf("NumsToCoords: (%d, %d)\n", column, row);
@@ -132,7 +149,7 @@ public class PodgladLabiryntu extends JPanel {
             return;
         }*/
         this.G = g;
-        System.out.printf("Painting (%d, %d)\n",maxwidth,maxheight);
+        //System.out.printf("Painting (%d, %d)\n",maxwidth,maxheight);
         super.paintComponent(g);
         /*Graphics g2 = (Graphics2D) g;
         g2.setColor(Color.gray);
@@ -168,7 +185,7 @@ public class PodgladLabiryntu extends JPanel {
                         drawGreen(x, y);
                         break;
                     default:
-                        System.out.println("Coś jest bez sensu...");
+                        System.out.println("Coś jest bez sensu w Podglądzie Labiryntu...");
                 }
             }
         }
@@ -227,13 +244,13 @@ public class PodgladLabiryntu extends JPanel {
         // Zwraca parę (kolumna, wiersz) odpowiadającą współrzędnym Pola, do którego należy punkt (x,y)
         // Współrzędne Pola są liczone od 1
         // Zwraca null, jeśli współrzędne (x,y) są z poza sensownego zakresu
-        System.out.printf("initcoords: (%d, %d)\n", x, y);
+        //System.out.printf("initcoords: (%d, %d)\n", x, y);
         if (sizeofone == 0) {
             tempintarr[0] = 0;tempintarr[1] = 0;return tempintarr; // Aby uniknąć dzielenia przez 0
         }
         tempintarr[0] = x-centering_start_x;tempintarr[1] = y-centering_start_y;
         if (tempintarr[0] <= 0 || tempintarr[1] <= 0) return null;
-        System.out.printf("fixedcoords: (%d, %d)\n", tempintarr[0], tempintarr[0]);
+        //System.out.printf("fixedcoords: (%d, %d)\n", tempintarr[0], tempintarr[0]);
         tempintarr[0] /= sizeofone; tempintarr[1] /= sizeofone;
         tempintarr[0]++;tempintarr[1]++; // Pierwsze Pole ma współrzędne (1,1)
         if (tempintarr[0] > MEM.getMaze().getCols() || tempintarr[1] > MEM.getMaze().getRows() || tempintarr[0] <= 0 || tempintarr[1] <= 0) return null;
