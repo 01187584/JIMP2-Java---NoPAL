@@ -1,23 +1,43 @@
 package graph_v2;
 
+import algorithm.BFS;
+
 public class GraphTester {
     public static void main(String [] args) {
-        //TypicalUndirectedGraph<Vertex, Edge<Vertex>> TestGraph = new TypicalUndirectedGraph<Vertex, Edge<Vertex>>(Vertex.class, (Class<Edge<Vertex>>)(Class<?>)Edge.class);
         TypicalUndirectedGraph TestGraph = new TypicalUndirectedGraph();
-        //Vertex V1 = new Vertex();Vertex V2 = new Vertex();
-        //TestGraph.test();
-        //TestGraph.addVertex(V1);
-        //TestGraph.addVertex(V2);
-        TestGraph.addVertex();TestGraph.addVertex();TestGraph.addVertex();
+        TestGraph.addVertex();
+        TestGraph.addVertex();
+        TestGraph.addVertex();
+        TestGraph.addVertex();
+        TestGraph.addVertex();
+        TestGraph.addVertex();
+        TestGraph.addVertex();
+        TestGraph.addVertex();
         TestGraph.addEdge(1,2);
-        System.out.println(TestGraph);
-        //TestGraph.addEdge(new Edge<Vertex>(null, null));
-        //TestGraph.addEdge(new Edge<Vertex>(TestGraph.getVertex(1), TestGraph.getVertex(2)));
-        //TestGraph.addEdge(TestGraph.getVertex(1), TestGraph.getVertex(2));
-        //TestGraph.addVertices(10);
-        TestGraph.addEdge(2,3);
-        System.out.println(TestGraph);
-        TestGraph.destroy();
-        System.out.println(TestGraph);
+        TestGraph.addEdge(3,1);
+        TestGraph.addEdge(3,4);
+        TestGraph.addEdge(2,4);
+        TestGraph.addEdge(5,4);
+        TestGraph.addEdge(5,6);
+        TestGraph.addEdge(6,7);
+        TestGraph.addEdge(7,8);
+        TestGraph.addEdge(8,4);
+        Vertex startVertex = TestGraph.getVertex(1);
+        Vertex endVertex = TestGraph.getVertex(8);
+        System.out.println(TestGraph); //nie printuje startv/endv
+
+        BFS bfsAlgorithm = new BFS();
+        bfsAlgorithm.initialize(TestGraph);
+        bfsAlgorithm.executeAlgorithm(startVertex, endVertex);
+
+        System.out.println("Znalezione rozwiązania: " + bfsAlgorithm.getSolutionAmount());
+        System.out.println("Najkrótsza droga: " + bfsAlgorithm.getSolution());
+        System.out.println("Długość najkrótszej drogi: " + bfsAlgorithm.getSolutionLength());
+        for(int i=0; i<bfsAlgorithm.getSolutionAmount(); i++)
+        {
+            System.out.println("Droga " + i + ":" +  bfsAlgorithm.getSolution(i));
+        }
+
+        //TestGraph.destroy();
     }
 }

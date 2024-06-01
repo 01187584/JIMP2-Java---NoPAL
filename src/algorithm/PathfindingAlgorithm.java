@@ -2,20 +2,16 @@ package algorithm;
 
 import graph_v2.Graph;
 import graph_v2.Vertex;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public interface PathfindingAlgorithm {
     void initialize(Graph g);
-    List<List<Vertex>> executeAlgorithm(Vertex start, Vertex end);
-    boolean equals(Object o);
-    int hashCode();
+    ArrayList<ArrayList<Vertex>> executeAlgorithm(Vertex start, Vertex end);
     int getSolutionAmount();
-    List<Vertex> getSolution();
-    List<Vertex> getSolution(int solutionNumber);
+    ArrayList<Vertex> getSolution();
+    ArrayList<Vertex> getSolution(int solutionNumber);
     int getSolutionLength();
     int getSolutionLength(int solutionNumber);
-
-
-
-    
 }
