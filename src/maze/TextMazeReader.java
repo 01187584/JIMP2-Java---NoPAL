@@ -65,9 +65,11 @@ public class TextMazeReader extends MazeReader {
                         break;
                     case ENTRANCE_FIELD:
                         M.getField(cur_column, cur_row).setFieldType(Field.ENTRANCE_FIELD);
+                        M.addStartVertex(M.getField(cur_column, cur_row));
                         break;
                     case EXIT_FIELD:
                         M.getField(cur_column, cur_row).setFieldType(Field.EXIT_FIELD);
+                        M.addEndVertex(M.getField(cur_column, cur_row));
                         break;
                     case 10: // LF
                         if (!CR) {

@@ -12,8 +12,8 @@ public class TypicalUndirectedGraph implements Graph {
     HashMap<Integer, Vertex> V;
     Edges E;
     private static final boolean checkCorrectUse = true;
-    private HashSet<Vertex> StartV;
-    private HashSet<Vertex> EndV;
+    protected HashSet<Vertex> StartV;
+    protected HashSet<Vertex> EndV;
 
     public TypicalUndirectedGraph() {
         last_id++;

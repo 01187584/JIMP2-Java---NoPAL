@@ -290,4 +290,25 @@ public class Maze extends TypicalUndirectedGraph {
     public Edge getSampleEdge() {
         return SampleMazeSegment;
     }
+    public Vertex getStartVertex() {
+        return StartV.isEmpty() ? null : StartV.iterator().next();
+    }
+    public Vertex getEndVertex() {
+        return EndV.isEmpty() ? null : EndV.iterator().next();
+    }
+    public void addStartVertex(Vertex v) {
+        StartV.add(v);
+    }
+
+    public void addEndVertex(Vertex v) {
+        EndV.add(v);
+    }
+
+    public void clearStartVertices() {
+        StartV.clear();
+    }
+
+    public void clearEndVertices() {
+        EndV.clear();
+    }
 }

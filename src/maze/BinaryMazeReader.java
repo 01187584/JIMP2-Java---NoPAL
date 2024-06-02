@@ -83,6 +83,8 @@ public class BinaryMazeReader extends MazeReader {
             }
             M.getField(entryX, entryY).setFieldType(Field.ENTRANCE_FIELD);
             M.getField(exitX, exitY).setFieldType(Field.EXIT_FIELD);
+            M.addStartVertex(M.getField(entryX, entryY));
+            M.addEndVertex(M.getField(exitX, exitY));
 
         }
         catch(IOException e){

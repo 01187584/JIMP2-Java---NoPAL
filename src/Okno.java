@@ -2,23 +2,17 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
-import java.io.File;
-import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import java.awt.*;
 //import java.util.concurrent.TimeUnit;
 import java.awt.event.*;
-import java.io.*; // printf
 
-import java.awt.*;
-import java.util.List;
-import java.util.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import algorithm.BFS;
 import maze.BinaryMazeReader;
 import maze.Maze;
 import maze.TextMazeReader;
@@ -31,6 +25,7 @@ public final class Okno {
     private final Dimension stdRozmPrzycisku = new Dimension(230, 120);
     private PodgladLabiryntu PL;
     JTextPane komunikaty; // Do komunikatów
+    private String kroki; //TODO: to raczej nie powinno się tak robić
     public Okno() {
         //this.M = new Maze(30,30);
         MazeReader Reader = new TextMazeReader(M);
@@ -142,11 +137,7 @@ public final class Okno {
         lista.setForeground(Color.BLACK); //czcionka
         lista.setEditable(false);
         lista.setLineWrap(true);
-        for(int i=1; i<=15; i++)
-        {
-            lista.append("Oto " + i + " linijka tekstu.\n");
-        }
-
+        lista.append(kroki);
         JScrollPane scroll = new JScrollPane(lista);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scroll.setBounds(50, 50, 300, 150);
@@ -270,6 +261,16 @@ public final class Okno {
         JButton przyciskRozwiaz = new JButton("Rozwiąż");
         //przyciskRozwiaz.setBounds(26, 566,200,85 );
         przyciskRozwiaz.setPreferredSize(stdRozmPrzycisku);
+        przyciskRozwiaz.addActionListener(e -> {
+            BFS bfsAlgorithm = new BFS();
+            bfsAlgorithm.initialize(M);
+            /*System.out.println(M.getStartV());
+            System.out.println(M.getEndV());
+            System.out.println(M.getEndVertex());*/
+            bfsAlgorithm.executeAlgorithm(M.getStartVertex(), M.getEndVertex());
+            System.out.println("Najkrótsza droga: " + bfsAlgorithm.getSolution());
+            kroki = bfsAlgorithm.shortestSolutionToString().toString();
+        });
         //GUI.add(przyciskRozwiaz);
         tenPanel.add(przyciskRozwiaz);
     }

@@ -2,10 +2,18 @@ package algorithm;
 
 import graph_v2.Graph;
 import graph_v2.Vertex;
+import maze.Maze;
 
 import java.util.*;
 
 public class BFS implements PathfindingAlgorithm {
+
+    enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    }
     private Graph graph;
     private ArrayList<ArrayList<Vertex>> allPaths;
     private List<Vertex> shortestPath;
@@ -21,7 +29,7 @@ public class BFS implements PathfindingAlgorithm {
     public ArrayList<ArrayList<Vertex>> executeAlgorithm(Vertex start, Vertex end) {
         ArrayList<ArrayList<Vertex>> results = new ArrayList<>();
         if (graph == null || start == null || end == null) {
-            throw new InvalidSolutionNumberException("Błędne wywołanie algorytmu BFS.");
+            throw new InvalidGraphInvocation("Błędne wywołanie algorytmu BFS.");
         }
 
         Queue<List<Vertex>> queue = new LinkedList<>();
@@ -49,7 +57,6 @@ public class BFS implements PathfindingAlgorithm {
                 }
             }
         }
-
         this.allPaths = results;
         return results;
     }
@@ -84,6 +91,38 @@ public class BFS implements PathfindingAlgorithm {
         }
         return allPaths.get(solutionNumber).size();
     }
+    public StringBuilder shortestSolutionToString() {
+        int temp = 0;
+        int kroki = 0;
+        Direction obecnyKierunek = null;
+        Direction nowyKierunek = null;
+        StringBuilder directionList = new StringBuilder("START\n");
+
+        for (int i = 0; i < shortestPath.size() - 1; i++) {
+            temp = shortestPath.get(i + 1).getNum() - shortestPath.get(i).getNum();
+
+            if (temp == 1) {
+                nowyKierunek = Direction.RIGHT;
+            } else if (temp == -1) {
+                nowyKierunek = Direction.LEFT;
+            } else if (temp > 1) {
+                nowyKierunek = Direction.DOWN;
+            } else if (temp < -1) {
+                nowyKierunek = Direction.UP;
+            }
+
+            if (obecnyKierunek == null || obecnyKierunek == nowyKierunek) {
+                kroki++;
+            } else {
+                directionList.append("FORWARD ").append(kroki).append('\n');
+                directionList.append(turnDirection(obecnyKierunek, nowyKierunek)).append('\n');
+                kroki = 1;
+            }
+            obecnyKierunek = nowyKierunek;
+        }
+        directionList.append("FORWARD ").append(kroki).append('\n').append("STOP");
+        return directionList;
+    }
     public static class InvalidSolutionNumberException extends RuntimeException {
         public InvalidSolutionNumberException(String message) {
             super(message);
@@ -94,6 +133,42 @@ public class BFS implements PathfindingAlgorithm {
             super(message);
         }
     }
-
+    private String turnDirection(Direction oldDirection, Direction newDirection) {
+        switch (oldDirection) {
+            case UP:
+                switch (newDirection) {
+                    case LEFT:
+                        return "TURN LEFT";
+                    case RIGHT:
+                        return "TURN RIGHT";
+                }
+                break;
+            case DOWN:
+                switch (newDirection) {
+                    case LEFT:
+                        return "TURN RIGHT";
+                    case RIGHT:
+                        return "TURN LEFT";
+                }
+                break;
+            case LEFT:
+                switch (newDirection) {
+                    case UP:
+                        return "TURN RIGHT";
+                    case DOWN:
+                        return "TURN LEFT";
+                }
+                break;
+            case RIGHT:
+                switch (newDirection) {
+                    case UP:
+                        return "TURN LEFT";
+                    case DOWN:
+                        return "TURN RIGHT";
+                }
+                break;
+        }
+        return "";  //niedobrze
+    }
 
 }

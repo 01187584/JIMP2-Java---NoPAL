@@ -30,6 +30,7 @@ public class Field extends SimpleVertex {
     public static final int BLACK_FIELD = 1;
     public static final int ENTRANCE_FIELD = 2;
     public static final int EXIT_FIELD = 3;
+    public static final int SOLUTION_FIELD = 4;
     private static final Random rand = new Random();
     private static HashSet<Vertex> AdjacentVertices = new HashSet<Vertex>(4);
     private static int tempintarr[]; //= new int[2];
@@ -105,6 +106,8 @@ public class Field extends SimpleVertex {
                 return ConsoleColors.GREEN_BACKGROUND_BRIGHT+str+ConsoleColors.RESET;
             case EXIT_FIELD:
                 return ConsoleColors.RED_BACKGROUND+str+ConsoleColors.RESET;
+            case SOLUTION_FIELD:
+                return ConsoleColors.CYAN_BACKGROUND+str+ConsoleColors.RESET;
             default:
                 throw new IllegalAccessError("Coś poszło nie tak: Pole ma nieznany typ:"+String.valueOf(type));
         }
