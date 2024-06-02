@@ -104,19 +104,19 @@ public class Maze extends TypicalUndirectedGraph {
     }
     public Field getFieldN(int column, int row) {
         if (checkBounds(column, row-1)) return getField(column, row-1);
-        return null; // Tu możemy dojść, jeśli nie istnieje takie Pole
+        return null; // Zwraca null, jeśli nie istnieje takie Pole
     }
     public Field getFieldE(int column, int row) {
         if (checkBounds(column+1, row)) return getField(column+1, row);
-        return null; // Tu możemy dojść, jeśli nie istnieje takie Pole
+        return null; // Zwraca null, jeśli nie istnieje takie Pole
     }
     public Field getFieldS(int column, int row) {
         if (checkBounds(column, row+1)) return getField(column, row+1);
-        return null; // Tu możemy dojść, jeśli nie istnieje takie Pole
+        return null; // Zwraca null, jeśli nie istnieje takie Pole
     }
     public Field getFieldW(int column, int row) {
         if (checkBounds(column-1, row)) return getField(column-1, row);
-        return null; // Tu możemy dojść, jeśli nie istnieje takie Pole
+        return null; // Zwraca null, jeśli nie istnieje takie Pole
     }
     public int[] getFieldCoords(Field F) {
         return getFieldCoords(F, checkCorrectUse);
