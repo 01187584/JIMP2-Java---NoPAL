@@ -17,9 +17,9 @@ public interface Vertex {
     public void remove(); // powinno się używać zamiast destroy() poza tym packagem
     public void destroy(); // powinno być protected, ale Java...
     public EdgesIterable getEdges(); // niepolecane, może nie zostać zaimplementowane
-    public boolean GetIsStartVertex();
-    public boolean GetIsEndVertex();
-    public void SetIsStartVertex(boolean to);
+    public boolean getIsStartVertex();
+    public boolean getIsEndVertex();
+    public void setIsStartVertex(boolean to);
     public void SetIsEndVertex(boolean to);
     public StringBuilder toStringBuilder();
 }

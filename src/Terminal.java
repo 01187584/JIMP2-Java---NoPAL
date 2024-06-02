@@ -1,7 +1,9 @@
 import java.util.Scanner;
 
 import observer.MazeEventManager;
+import observer.SelectAlgorithmEvent;
 import observer.SetFieldTypeEvent;
+import observer.SolveMazeEvent;
 import observer.LoadMazeEvent;
 import observer.MazeEvent;
 import observer.MazeEventListener;
@@ -48,6 +50,14 @@ public class Terminal implements MazeEventListener {
                     SetFieldTypeEvent SET_FIELD_TYPE_event = (SetFieldTypeEvent)event;
                     System.out.printf("ustaw_pole %s %s %c\n",SET_FIELD_TYPE_event.getColumn(),SET_FIELD_TYPE_event.getRow(),SET_FIELD_TYPE_event.getFieldType());
                     break;
+                case SELECT_ALGORITHM:
+                    SelectAlgorithmEvent SELECT_ALGORITHM_event = (SelectAlgorithmEvent)event;
+                    System.out.printf("wybierz_algorytm %s\n", SELECT_ALGORITHM_event.getSelectedAlgorithmString());
+                    break;
+                case SOLVE_MAZE:
+                    SolveMazeEvent SOLVE_MAZE_event = (SolveMazeEvent)event;
+                    System.out.printf("znajdz_najkrotsza_sciezke\n");
+                    break;
                 default:
                     System.out.println("NIEZNANY_TYP_WYDARZENIA");
                     break;
@@ -62,22 +72,35 @@ public class Terminal implements MazeEventListener {
     }
     private void readUserInput() {
         MazeEvent ME = null;
-        switch (input.next()) {
-            case "wczytaj":
-                ME = wczytaj();
-                break;
-            case "ustaw_pole":
-                ME = ustaw_pole();
-                break;
-            default:
-                System.out.print("Nierozpoznane polecenie.\n>>> ");
-                break;
+        try {
+            switch (input.next()) {
+        //switch (input.nextLine()) {
+                case "wczytaj":
+                    ME = wczytaj();
+                    break;
+                case "ustaw_pole":
+                    ME = ustaw_pole();
+                    break;
+                case "wybierz_algorytm":
+                    ME = wybierz_algorytm();
+                    break;
+                case "znajdz_najkrotsza_sciezke":
+                case "rozwiaz":
+                    ME = znajdz_najkrotsza_sciezke();
+                    break;
+                default:
+                    System.out.print("Nierozpoznane polecenie.\n>>> ");
+                    break;
+            }
+            if (ME == null) expectingEvent = false;
+            else {
+                expectingEvent = true;
+                MEM.notifyListeners(ME);
+            }
+        } catch (java.util.NoSuchElementException E) {
+            // Celowe przerwanie działania programu
         }
-        if (ME == null) expectingEvent = false;
-        else {
-            expectingEvent = true;
-            MEM.notifyListeners(ME);
-        }
+        
     }
     private LoadMazeEvent wczytaj() {
         try {
@@ -107,5 +130,18 @@ public class Terminal implements MazeEventListener {
             System.out.println("Nieprawidłowy format polecenia ustaw_pole.");
         }
         return null;
+    }
+    private SelectAlgorithmEvent wybierz_algorytm() {
+        String selectedAlgorithmString;
+        try {
+            selectedAlgorithmString = input.next();
+            return new SelectAlgorithmEvent(MEM, selectedAlgorithmString);
+        } catch (Exception e) {
+            System.out.println("Nieprawidłowy format polecenia wybierz_algorytm.");
+        }
+        return null;
+    }
+    private SolveMazeEvent znajdz_najkrotsza_sciezke() {
+        return new SolveMazeEvent(MEM);
     }
 }

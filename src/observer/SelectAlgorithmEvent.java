@@ -11,11 +11,11 @@ public class SelectAlgorithmEvent extends MazeEvent {
 
         Statuses.put("SELECT_ALGORITHM_NO_SUCH_ALGORITHM", "Aplikacja nie wspiera podanego algorytmu lub podano błędną nazwę algorytmu.", true);
     }
+    private final String selectedAlgorithmString;
 
-
-    public SelectAlgorithmEvent(MazeEventManager MEM) {
+    public SelectAlgorithmEvent(MazeEventManager MEM, String selectedAlgorithmString) {
         super(MEM, Type.SELECT_ALGORITHM);
-        //TODO Auto-generated constructor stub
+        this.selectedAlgorithmString = selectedAlgorithmString;
     }
 
     @Override
@@ -23,4 +23,18 @@ public class SelectAlgorithmEvent extends MazeEvent {
         super.setStatus(Statuses, newStatus);
     }
     
+    @Override
+    protected void performAction() {
+        super.performAction();
+        if (MEM.PathfindingAlgorithms.get(selectedAlgorithmString) == null) {
+            setStatus("SELECT_ALGORITHM_NO_SUCH_ALGORITHM");
+            return;
+        }
+        MEM.selectedAlgorithmString = selectedAlgorithmString;
+        setStatus("OK", "Wybrano algorytm "+selectedAlgorithmString);
+    }
+
+    public String getSelectedAlgorithmString() {
+        return selectedAlgorithmString;
+    }
 }

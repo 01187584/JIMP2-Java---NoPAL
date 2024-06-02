@@ -104,17 +104,17 @@ public class SimpleVertex implements Vertex {
     }
 
     @Override
-    public boolean GetIsStartVertex() {
+    public boolean getIsStartVertex() {
         return IsStartVertex;
     }
 
     @Override
-    public boolean GetIsEndVertex() {
+    public boolean getIsEndVertex() {
         return IsEndVertex;
     }
 
     @Override
-    public void SetIsStartVertex(boolean to) {
+    public void setIsStartVertex(boolean to) {
         IsStartVertex = to;
         if (to) {
             refGraph.getStartV().add(this);

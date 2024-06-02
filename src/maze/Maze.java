@@ -45,6 +45,7 @@ import graph_v2.*;
 public class Maze extends TypicalUndirectedGraph {
     // TODO - zmienić checkCorrectUse na CHECK_CORRECT_USE, bo jest final
     private final static boolean checkCorrectUse = true; // Sprawdzamy, czy używamy labiryntu poprawnie
+    private boolean isSolved;
     private int num_cols;
     private int num_rows;
     private int max_cols;
@@ -87,14 +88,14 @@ public class Maze extends TypicalUndirectedGraph {
     }
 
     public void addField() {
-        addField(Field.WHITE_FIELD);
+        addField(Field.State.WHITE_FIELD);
     }
-    public void addField(int type) {
+    public void addField(Field.State initialState) {
         //Field F = new Field(lastVertexNum+1, type);
         //Field F = new Field(lastVertexNum+1);
         //addVertex(F);
         //setFieldType(F, type); // ustawia odpowiednio sąsiednie odcinki labiryntu
-        ((Field)addVertex()).setFieldType(type); // ustawia odpowiednio sąsiednie odcinki labiryntu
+        ((Field)addVertex()).setFieldState(initialState); // ustawia odpowiednio sąsiednie odcinki labiryntu
     }
 
     public Field getField(int column, int row) {
@@ -177,6 +178,12 @@ public class Maze extends TypicalUndirectedGraph {
     }
     public int getRows() {
         return num_rows;
+    }
+    public boolean getIsSolved() { // Powinno być używane tylko przez klasy dziedziczące po MazeEvent!
+        return isSolved;
+    }
+    public void setIsSolved(boolean to) { // Powinno być używane tylko przez klasy dziedziczące po MazeEvent!
+        isSolved = to;
     }
     /*public void resize(int new_cols, int new_rows) {
         // UWAGA: w obecnej implementacji wywołanie resize może spowodować utatę informacji o Polach i Odcinkach labiryntu

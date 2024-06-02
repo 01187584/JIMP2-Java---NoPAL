@@ -1,6 +1,7 @@
 // v2
 package observer;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import maze.Maze;
@@ -15,9 +16,12 @@ import algorithm.*;
 // Wysyła wydarzenia PO ich realizacji (bądź próbie realizacji)
 public class MazeEventManager {
     private final Maze M;
+    protected final MazeReader[] MazeReaders;
     protected final TextMazeReader TMR;
     protected final BinaryMazeReader BMR;
-    protected final MazeReader[] MazeReaders;
+    protected final HashMap<String, PathfindingAlgorithm> PathfindingAlgorithms;
+    protected String selectedAlgorithmString;
+    protected final BFS BFSAlgorithm;
     private HashSet<MazeEventListener> listeners;
 
     public MazeEventManager() {
@@ -29,6 +33,11 @@ public class MazeEventManager {
         TMR = new TextMazeReader(M);
         BMR = new BinaryMazeReader(M);
         MazeReaders = new MazeReader[] {TMR, BMR};
+        BFSAlgorithm = new BFS();//BFSAlgorithm.initialize(M); inicjacja przy wykonywaniu, aby uwzględnić zmiany w labiryncie
+        //PathfindingAlgorithms = new PathfindingAlgorithm[] {BFSAlgorithm};
+        PathfindingAlgorithms = new HashMap<>();
+        PathfindingAlgorithms.put("BFS", BFSAlgorithm);
+        // selectedAlgorithmString powinen zostać ustawiony przez Main poprzez użycie wydarzenia SelectAlgorithmEvent
     }
     public void addEventListener(MazeEventListener listener) {
         listeners.add(listener);
@@ -56,5 +65,8 @@ public class MazeEventManager {
     public Maze getMaze() {
         // Powinno być używane TYLKO do odczytu
         return M;
+    }
+    public HashSet<String> getPathfindingAlgorithmNames() {
+        return (HashSet<String>)PathfindingAlgorithms.keySet();
     }
 }

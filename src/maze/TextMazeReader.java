@@ -60,16 +60,16 @@ public class TextMazeReader extends MazeReader {
             while ((character = file.read()) != -1) {
                 switch (character) {
                     case WHITE_FIELD:
-                        M.getField(cur_column, cur_row).setFieldType(Field.WHITE_FIELD);
+                        M.getField(cur_column, cur_row).setFieldState(Field.State.WHITE_FIELD);
                         break;
                     case BLACK_FIELD:
-                        M.getField(cur_column, cur_row).setFieldType(Field.BLACK_FIELD);
+                        M.getField(cur_column, cur_row).setFieldState(Field.State.BLACK_FIELD);
                         break;
                     case ENTRANCE_FIELD:
-                        M.getField(cur_column, cur_row).setFieldType(Field.ENTRANCE_FIELD);
+                        M.getField(cur_column, cur_row).setFieldState(Field.State.ENTRANCE_FIELD);
                         break;
                     case EXIT_FIELD:
-                        M.getField(cur_column, cur_row).setFieldType(Field.EXIT_FIELD);
+                        M.getField(cur_column, cur_row).setFieldState(Field.State.EXIT_FIELD);
                         break;
                     case 10: // LF
                         if (!CR) {

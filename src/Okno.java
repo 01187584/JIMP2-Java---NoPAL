@@ -17,6 +17,7 @@ import java.io.IOException;
 //import maze.TextMazeReader;
 //import maze.MazeReader;
 import observer.MazeEventManager;
+import observer.SolveMazeEvent;
 import observer.MazeEventListener;
 import observer.LoadMazeEvent;
 import observer.MazeEvent;
@@ -98,7 +99,15 @@ public final class Okno implements MazeEventListener {
         // TODO: dodać obsługę wybierania algorytmu
     }
     private void handle_SOLVE_MAZE(MazeEvent event) {
-        // TODO: dodać obsługę rozwiązywania labiryntu
+        switch (event.getStatus()) {
+            case "OK":
+                komunikaty.setText(event.getStatusMessage());
+                PL.repaint();
+                break;
+            default:
+                komunikaty.setText(event.getStatusMessage());
+                break;
+        }
     }
     private void handle_LOAD_MAZE(MazeEvent event) {
         switch (event.getStatus()) {
@@ -139,7 +148,6 @@ public final class Okno implements MazeEventListener {
         // TODO
     }
     private void handle_SET_FIELD_TYPE(MazeEvent event) {
-        // TODO: obsłużyć błąd - można podać nieprawidłowy typ Pola
         switch (event.getStatus()) {
             case "SET_FIELD_TYPE_INVALID_COORDS":
                 komunikaty.setText(event.getStatusMessage());
@@ -362,13 +370,17 @@ public final class Okno implements MazeEventListener {
 
     private void dodajPrzyciskRozwiaz()
     {
-        JButton przyciskRozwiaz = new JButton("Rozwiąż");
+        JButton przyciskRozwiaz = new JButton("Znajdź najkrótszą ścieżkę");
         //przyciskRozwiaz.setBounds(26, 566,200,85 );
         przyciskRozwiaz.setPreferredSize(stdRozmPrzycisku);
+        przyciskRozwiaz.addActionListener(l -> Rozwiaz());
         //GUI.add(przyciskRozwiaz);
         tenPanel.add(przyciskRozwiaz);
     }
 
+    private void Rozwiaz() {
+        MEM.notifyListeners(new SolveMazeEvent(MEM));
+    }
 
     private void dodajKomunikaty()
     {

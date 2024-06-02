@@ -4,6 +4,7 @@ import com.formdev.flatlaf.*;
 
 import observer.LoadMazeEvent;
 import observer.MazeEventManager;
+import observer.SelectAlgorithmEvent;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,8 +18,10 @@ public class Main {
         Okno OPAL = new Okno(MEM);
         // Wczytanie przykładowego labiryntu
         MEM.notifyListeners(new LoadMazeEvent(MEM, "maze-test.txt"));
+        MEM.notifyListeners(new SelectAlgorithmEvent(MEM, "BFS"));
 
         OPAL.wczytajGUI();
         new Terminal(MEM);
+        
     }
 }

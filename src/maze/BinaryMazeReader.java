@@ -71,9 +71,9 @@ public class BinaryMazeReader extends MazeReader {
                 for(int j=0; j<unsignedByteToInt(count)+1; j++)
                 {
                     if(value==wall)
-                        M.getField(cur_column, cur_row).setFieldType(Field.BLACK_FIELD);
+                        M.getField(cur_column, cur_row).setFieldState(Field.State.BLACK_FIELD);
                     else if(value==path)
-                        M.getField(cur_column, cur_row).setFieldType(Field.WHITE_FIELD);
+                        M.getField(cur_column, cur_row).setFieldState(Field.State.WHITE_FIELD);
                     else throw new InvalidFileFormatException("Pomiędzy sprawdzeniem pliku a odczytaniem go zaszły w nim zmiany, albo coś się bardzo popsuło...");
                     cur_column++;
                     if(cur_column>columns){
@@ -82,8 +82,8 @@ public class BinaryMazeReader extends MazeReader {
                     }
                 }
             }
-            M.getField(entryX, entryY).setFieldType(Field.ENTRANCE_FIELD);
-            M.getField(exitX, exitY).setFieldType(Field.EXIT_FIELD);
+            M.getField(entryX, entryY).setFieldState(Field.State.ENTRANCE_FIELD);
+            M.getField(exitX, exitY).setFieldState(Field.State.EXIT_FIELD);
 
         }
         catch(IOException e){

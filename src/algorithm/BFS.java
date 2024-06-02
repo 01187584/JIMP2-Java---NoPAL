@@ -6,6 +6,9 @@ import graph_v2.Vertex;
 import java.util.*;
 
 public class BFS implements PathfindingAlgorithm {
+    // Ta implementacja jest poprawna, ale niestety niewydajna:
+    // używa często ArrayList.contains, które działa w czasie liniowym od całego rozmiaru tablicy i 
+    // potencjalnie alokuje dużo pamięci na rozgałęziające się ścieżki
     private Graph graph;
     private ArrayList<ArrayList<Vertex>> allPaths;
     private List<Vertex> shortestPath;
@@ -31,7 +34,8 @@ public class BFS implements PathfindingAlgorithm {
 
         while (!queue.isEmpty()) {
             List<Vertex> path = queue.poll();
-            Vertex current = path.getLast();
+            //Vertex current = path.getLast(); Od JDK 21
+            Vertex current = getLast(path); // Mam JDK 20
 
             if (current.equals(end)) {
                 results.add(new ArrayList<>(path));
@@ -52,6 +56,10 @@ public class BFS implements PathfindingAlgorithm {
 
         this.allPaths = results;
         return results;
+    }
+
+    private Vertex getLast(List<Vertex> list) {
+        return list.get(list.size()-1);
     }
 
     @Override

@@ -1,121 +1,64 @@
 package maze;
 
+import java.awt.Graphics;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
-import util.ConsoleColors;
 
 import graph_v2.Vertex;
 import graph_v2.SimpleVertex;
 
-/*abstract class AbstractField extends SimpleVertex {
-    protected int type; // Nie ustawiać manualnie atrybutu type, tylko użyć Maze.setFieldType
-    public static final int WHITE_FIELD = 0;
-    public static final int BLACK_FIELD = 1;
-    public static final int ENTRANCE_FIELD = 2;
-    public static final int EXIT_FIELD = 3;
-
-    protected AbstractField(Maze M) {
-        super(M);
-    }
-    //public abstract void setRandom();
-    public abstract boolean isEntranceField();
-    public abstract boolean isExitField();
-    public abstract boolean isWhite();
-    public abstract boolean isBlack();
-}*/
-
 public class Field extends SimpleVertex {
-    private int type; // Nie ustawiać manualnie atrybutu type, tylko użyć Maze.setFieldType
-    // TODO - może przenieść poniższe 4 do odpowiedniego enum, odpowiednio zaktualizować MazeEvent i inne
-    // TODO - alternatywnie ZAMIAST powyższego: stworzyć nowe klasy WhiteField, BlackField, EntraceField i ExitField dziedziczące po klasie abstrakycjnej Field, aby mogły być niezależnie modyfikowane
-    public static final int WHITE_FIELD = 0;
-    public static final int BLACK_FIELD = 1;
-    public static final int ENTRANCE_FIELD = 2;
-    public static final int EXIT_FIELD = 3;
-    // TODO - zmienić rand na RAND, bo jest final
-    private static final Random rand = new Random();
-    private static HashSet<Vertex> AdjacentVertices = new HashSet<Vertex>(4);
-    private static int tempintarr[]; //= new int[2];
+    private State currentState;
+    private final HashMap<State, FieldState> allStates;
+    public enum State {
+        WHITE_FIELD,
+        BLACK_FIELD,
+        ENTRANCE_FIELD,
+        EXIT_FIELD
+    }
+    private boolean isPartOfPath;
+    private static final Random RAND = new Random();
+    protected static HashSet<Vertex> AdjacentVertices = new HashSet<Vertex>(4); // Użwane bezpośrednio przez klasy dziedziczące po FieldState, a w innych miejscach trzeba użyć getAdjacentVertices
     public Field(Maze M) {
-        this(M, BLACK_FIELD);
+        this(M, State.BLACK_FIELD);        
     }
-    public Field(Maze M, int type) {
+    public Field(Maze M, State initialState) {
         super(M);
-        this.type = type;
+        if (initialState == null) throw new NullPointerException();
+        allStates = new HashMap<State, FieldState>();
+        allStates.put(State.WHITE_FIELD, new WhiteState(this));
+        allStates.put(State.BLACK_FIELD, new BlackState(this));
+        allStates.put(State.ENTRANCE_FIELD, new EntranceState(this));
+        allStates.put(State.EXIT_FIELD, new ExitState(this));
+        this.currentState = initialState;
     }
-    public static int getRandomType() {
-        if (randrange(0, 1) > 0) return WHITE_FIELD;
-        else return BLACK_FIELD;
-    }
-    public void setRandomType() {
-        setFieldType(getRandomType());
-    }
-    private static int randrange(int min, int max) {
-        return rand.nextInt(max - min + 1) + min;
-    }
-    private Maze getRefMaze() {
-        return (Maze)refGraph;
-    }
-    public void setFieldType(int type) {
-        //System.out.println("Ustawiam typ na "+String.valueOf(type));
-        //getRefMaze().getFieldCoords(F);
-        //int column, row;
-        //column = tempintarr[0];row = tempintarr[1];
-        //Field F0;
-
-        //if (F.isWhite()) {
-        //    // TRZEBA jeszcze usunąć przecież krawędzie!
-        //}
-        this.type = type;
-        
+    public static State getRandomState() {
         /*
-        if (!F.isBlack()) {
-            F0 = getFieldN(column, row);
-            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
-            F0 = getFieldE(column, row);
-            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
-            F0 = getFieldS(column, row);
-            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
-            F0 = getFieldW(column, row);
-            if (F0 != null && !F0.isBlack()) addMazeSegment(F, F0, false);
-        }*/
+         * Losowo zwraca białe lub czarne Pole
+         */
+        if (randrange(0, 1) > 0) return State.WHITE_FIELD;
+        else return State.BLACK_FIELD;
     }
-    public boolean isEntranceField() {
-        return type == ENTRANCE_FIELD;
+    public void setRandomState() {
+        /*
+         * Ustawia losowo na białe lub czarne
+         */
+        setFieldState(getRandomState());
     }
-    public boolean isExitField() {
-        return type == EXIT_FIELD;
+
+    private static int randrange(int min, int max) {
+        return RAND.nextInt(max - min + 1) + min;
     }
-    public boolean isWhite() {
-        return type == WHITE_FIELD;
-    }
-    public boolean isBlack() {
-        return type == BLACK_FIELD;
-    }
-    public int getType() {
-        return type;
+
+    public void setFieldState(State state) {
+        if (state == null) throw new NullPointerException();
+        currentState = state;
+        allStates.get(currentState).setState();
     }
 
     protected String toString(boolean includeVertexNum) {
-        String str;
-        if (includeVertexNum)
-            str = String.valueOf(VertexNum);
-        else
-            str = "  ";
-        switch (type) {
-            case WHITE_FIELD:
-                return ConsoleColors.WHITE_BACKGROUND_BRIGHT+str+ConsoleColors.RESET;
-            case BLACK_FIELD:
-                return ConsoleColors.BLACK_BACKGROUND+str+ConsoleColors.RESET;
-            case ENTRANCE_FIELD:
-                return ConsoleColors.GREEN_BACKGROUND_BRIGHT+str+ConsoleColors.RESET;
-            case EXIT_FIELD:
-                return ConsoleColors.RED_BACKGROUND+str+ConsoleColors.RESET;
-            default:
-                throw new IllegalAccessError("Coś poszło nie tak: Pole ma nieznany typ:"+String.valueOf(type));
-        }
-        //return "A";
-        //return String.valueOf(type)+' '+String.valueOf(VertexNum);
+        return allStates.get(currentState).toString(includeVertexNum);
     }
 
     @Override
@@ -125,29 +68,32 @@ public class Field extends SimpleVertex {
 
     @Override
     public HashSet<Vertex> getAdjacentVetices() {
-        AdjacentVertices.clear();
-        tempintarr = getRefMaze().getFieldCoords(this);
-        int column, row;
-        column = tempintarr[0];row = tempintarr[1];
-        Field F0;
-        F0 = getRefMaze().getFieldN(column, row);
-        //System.out.println("Jestem w Polu o numerze "+String.valueOf(getNum())+" o współrzędnych ("+String.valueOf(column)+','+String.valueOf(row)+')');
-        if (F0 != null && !F0.isBlack()) AdjacentVertices.add(F0);
-        //System.out.println(F0);
-        F0 = getRefMaze().getFieldE(column, row);
-        if (F0 != null && !F0.isBlack()) AdjacentVertices.add(F0);
-        //System.out.println(F0);
-        F0 = getRefMaze().getFieldS(column, row);
-        if (F0 != null && !F0.isBlack()) AdjacentVertices.add(F0);
-        //System.out.println(F0);
-        F0 = getRefMaze().getFieldW(column, row);
-        if (F0 != null && !F0.isBlack()) AdjacentVertices.add(F0);
-        //System.out.println(F0);
-        return AdjacentVertices;
+        return allStates.get(currentState).getAdjacentVetices();
+    }
+
+    protected boolean getIsPartOfPath() {
+        return isPartOfPath;
+    }
+
+    public void setIsPartOfPath(boolean to) { // TODO: Powinno być używane tylko przez SolveMazeEvent!
+        isPartOfPath = to;
+    }
+
+    protected Maze getRefMaze() { // Do użycia tylko przez klasy dziedziczące po FieldState!
+        return (Maze)refGraph;
+    }
+
+    public State getCurrentState() { // TODO: zmienić na protected
+    //protected State getCurrentState() { // Do użycia tylko przez klasy dziedziczące po FieldState!
+        return currentState;
+    }
+
+    public void draw(Graphics G, int x, int y, int sizeofone) {
+        allStates.get(currentState).draw(G, x, y, sizeofone);
     }
 
     @Override
     public void connectWith(Vertex V) {
-        throw new UnsupportedOperationException("Pola labiryntu same łączą się ze sobą na podstawie ich typu przy każdym użyciu metody getAdjacentVetices()");
+        throw new RuntimeException("Pola labiryntu same łączą się ze sobą na podstawie ich typu przy każdym użyciu metody getAdjacentVetices()");
     }
 }

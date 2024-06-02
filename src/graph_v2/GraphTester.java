@@ -22,13 +22,15 @@ public class GraphTester {
         TestGraph.addEdge(6,7);
         TestGraph.addEdge(7,8);
         TestGraph.addEdge(8,4);
-        Vertex startVertex = TestGraph.getVertex(1);
-        Vertex endVertex = TestGraph.getVertex(8);
-        System.out.println(TestGraph); //nie printuje startv/endv
+        //Vertex startVertex = TestGraph.getVertex(1);
+        //Vertex endVertex = TestGraph.getVertex(8);
+        TestGraph.getVertex(1).setIsStartVertex(true);
+        TestGraph.getVertex(8).SetIsEndVertex(true);
+        System.out.println(TestGraph);
 
         BFS bfsAlgorithm = new BFS();
         bfsAlgorithm.initialize(TestGraph);
-        bfsAlgorithm.executeAlgorithm(startVertex, endVertex);
+        bfsAlgorithm.executeAlgorithm(TestGraph.getStartV().iterator().next(), TestGraph.getEndV().iterator().next());
 
         System.out.println("Znalezione rozwiązania: " + bfsAlgorithm.getSolutionAmount());
         System.out.println("Najkrótsza droga: " + bfsAlgorithm.getSolution());

@@ -5,7 +5,6 @@ import java.awt.event.*;
 
 import maze.Field;
 //import maze.Maze;
-import observer.MazeEvent;
 import observer.MazeEventManager;
 import observer.SetFieldTypeEvent;
 
@@ -69,27 +68,27 @@ public class PodgladLabiryntu extends JPanel {
                         else M.setFieldType(M.getField(column, row),Field.EXIT_FIELD); // ustawiamy na czerwony
                     }*/
                     //int[] intData = new int[] {column, row, 0};
-                    int fieldType;
+                    Field.State fieldState;
                     if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-                        if (MEM.getMaze().getField(column, row).isEntranceField()) fieldType = Field.getRandomType();
-                        else fieldType = Field.ENTRANCE_FIELD; // ustawiamy na zielony
+                        if (MEM.getMaze().getField(column, row).getCurrentState() == Field.State.ENTRANCE_FIELD) fieldState = Field.getRandomState();
+                        else fieldState = Field.State.ENTRANCE_FIELD; // ustawiamy na zielony
                     } else {
-                        if (MEM.getMaze().getField(column, row).isExitField()) fieldType = Field.getRandomType();
-                        else fieldType = Field.EXIT_FIELD; // ustawiamy na czerwony
+                        if (MEM.getMaze().getField(column, row).getCurrentState() == Field.State.EXIT_FIELD) fieldState = Field.getRandomState();
+                        else fieldState = Field.State.EXIT_FIELD; // ustawiamy na czerwony
                     }
                     // TODO - do poprawy:
                     char fT = ' ';
-                    switch (fieldType) {
-                        case Field.WHITE_FIELD:
+                    switch (fieldState) {
+                        case WHITE_FIELD:
                             fT = ' ';
                             break;
-                        case Field.BLACK_FIELD:
+                        case BLACK_FIELD:
                             fT = 'X';
                             break;
-                        case Field.ENTRANCE_FIELD:
+                        case ENTRANCE_FIELD:
                             fT = 'P';
                             break;
-                        case Field.EXIT_FIELD:
+                        case EXIT_FIELD:
                             fT = 'K';
                             break;
                     }
@@ -171,22 +170,23 @@ public class PodgladLabiryntu extends JPanel {
             for (int c = 1;c <= MEM.getMaze().getCols();c++) {
                 NumsToCoords(c, r);
                 x = tempintarr[0];y = tempintarr[1];
-                switch (MEM.getMaze().getField(c, r).getType()) {
-                    case Field.WHITE_FIELD:
+                /*switch (MEM.getMaze().getField(c, r).getCurrentState()) {
+                    case WHITE_FIELD:
                         drawWhite(x, y);
                         break;
-                    case Field.BLACK_FIELD:
+                    case BLACK_FIELD:
                         drawBlack(x, y);
                         break;
-                    case Field.EXIT_FIELD:
+                    case EXIT_FIELD:
                         drawRed(x, y);
                         break;
-                    case Field.ENTRANCE_FIELD:
+                    case ENTRANCE_FIELD:
                         drawGreen(x, y);
                         break;
                     default:
                         System.out.println("Coś jest bez sensu w Podglądzie Labiryntu...");
-                }
+                }*/
+                MEM.getMaze().getField(c, r).draw(G, x, y, sizeofone);
             }
         }
         //hasCanvasChanged = false;
@@ -199,11 +199,16 @@ public class PodgladLabiryntu extends JPanel {
         else drawBlack(x, y);
     }*/
     // TODO - przenieść drawWhite i drawBlack do klasy Field jako draw() - dzięki temu Pole stanie się odpowiedzialne za sposób rysowania go
-    public void drawWhite(int x, int y) {
+    /*public void drawWhite(int x, int y) {
         //hasCanvasChanged = true;
         //System.out.println("TRUE 1");
         G.setColor(Color.white);
         G.fillRect(x, y, sizeofone, sizeofone);
+    }*/
+    /*public void drawWhite(int x, int y) {
+        //hasCanvasChanged = true;
+        //System.out.println("TRUE 1");
+        WhiteState.draw(G, x, y, sizeofone);
     }
     public void drawBlack(int x, int y) {
         //hasCanvasChanged = true;
@@ -222,7 +227,7 @@ public class PodgladLabiryntu extends JPanel {
         //System.out.println("TRUE 123");
         G.setColor(Color.green);
         G.fillRect(x, y, sizeofone, sizeofone);
-    }
+    }*/
     private int[] fixCoords(int x, int y) {
         tempintarr[0] = x;tempintarr[1] = y;
         if (shouldFixCoords) {

@@ -94,7 +94,7 @@ public class MazeEventManager {
                 break;
             case SET_FIELD_TYPE:
                 try {
-                    M.getField(event.getIntData()[0], event.getIntData()[1]).setFieldType(event.getIntData()[2]);
+                    //M.getField(event.getIntData()[0], event.getIntData()[1]).setFieldType(event.getIntData()[2]);
                     event.setStatus(MazeEvent.Status.OK);
                 } catch (Exception e) {
                     event.setStatus(MazeEvent.Status.SET_FIELD_TYPE_INVALID_COORDS);

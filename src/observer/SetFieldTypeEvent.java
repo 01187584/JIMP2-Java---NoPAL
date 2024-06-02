@@ -55,18 +55,26 @@ public class SetFieldTypeEvent extends MazeEvent {
             setStatus("SET_FIELD_TYPE_INVALID_COORDS");
             return;
         }
+        if (MEM.getMaze().getIsSolved()) {
+            MEM.getMaze().setIsSolved(false);
+            for (int row = 1;row <= MEM.getMaze().getRows();row++) {
+                for (int column = 1;column <= MEM.getMaze().getCols();column++) {
+                    MEM.getMaze().getField(column, row).setIsPartOfPath(false);
+                }
+            }
+        }
         switch (fieldType) {
             case ' ':
-                MEM.getMaze().getField(column, row).setFieldType(Field.WHITE_FIELD);
+                MEM.getMaze().getField(column, row).setFieldState(Field.State.WHITE_FIELD);
                 break;
             case 'X':
-                MEM.getMaze().getField(column, row).setFieldType(Field.BLACK_FIELD);
+                MEM.getMaze().getField(column, row).setFieldState(Field.State.BLACK_FIELD);
                 break;
             case 'P':
-                MEM.getMaze().getField(column, row).setFieldType(Field.ENTRANCE_FIELD);
+                MEM.getMaze().getField(column, row).setFieldState(Field.State.ENTRANCE_FIELD);
                 break;
             case 'K':
-                MEM.getMaze().getField(column, row).setFieldType(Field.EXIT_FIELD);
+                MEM.getMaze().getField(column, row).setFieldState(Field.State.EXIT_FIELD);
                 break;
             default:
                 setStatus("SET_FIELD_TYPE_INVALID_FIELD_TYPE");
