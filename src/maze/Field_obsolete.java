@@ -58,7 +58,7 @@ public abstract class Field_obsolete extends SimpleVertex {
         //}
         this.type = type;
         //if (isEntranceField()) setIsStartVertex(true);
-        //if (isExitField()) SetIsEndVertex(true);
+        //if (isExitField()) setIsEndVertex(true);
         /*
         if (!F.isBlack()) {
             F0 = getFieldN(column, row);

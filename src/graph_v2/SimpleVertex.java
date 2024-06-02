@@ -124,7 +124,7 @@ public class SimpleVertex implements Vertex {
     }
 
     @Override
-    public void SetIsEndVertex(boolean to) {
+    public void setIsEndVertex(boolean to) {
         IsEndVertex = to;
         if (to) {
             refGraph.getEndV().add(this);

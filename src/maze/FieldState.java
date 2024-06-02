@@ -20,7 +20,7 @@ public abstract class FieldState {
          * Ustawia stan refField na ten stan
          */
         refField.setIsStartVertex(false);
-        refField.setIsStartVertex(false);
+        refField.setIsEndVertex(false);
     }
     protected Field getRefField() {
         return refField;

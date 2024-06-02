@@ -16,7 +16,7 @@ public class ExitState extends FieldState {
     @Override
     protected void setState() {
         super.setState();
-        refField.SetIsEndVertex(true);
+        refField.setIsEndVertex(true);
     }
 
     @Override

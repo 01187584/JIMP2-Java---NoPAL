@@ -25,7 +25,7 @@ public class GraphTester {
         //Vertex startVertex = TestGraph.getVertex(1);
         //Vertex endVertex = TestGraph.getVertex(8);
         TestGraph.getVertex(1).setIsStartVertex(true);
-        TestGraph.getVertex(8).SetIsEndVertex(true);
+        TestGraph.getVertex(8).setIsEndVertex(true);
         System.out.println(TestGraph);
 
         BFS bfsAlgorithm = new BFS();

@@ -20,6 +20,6 @@ public interface Vertex {
     public boolean getIsStartVertex();
     public boolean getIsEndVertex();
     public void setIsStartVertex(boolean to);
-    public void SetIsEndVertex(boolean to);
+    public void setIsEndVertex(boolean to);
     public StringBuilder toStringBuilder();
 }
