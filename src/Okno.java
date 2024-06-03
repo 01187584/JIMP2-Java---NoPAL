@@ -8,9 +8,7 @@ import javax.swing.text.StyledDocument;
 //import java.util.concurrent.TimeUnit;
 import java.awt.event.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import algorithm.BFS;
 import maze.BinaryMazeReader;
@@ -127,7 +125,7 @@ public final class Okno {
         mazeOutput.setResizable(false);
         mazeOutput.setLayout(null);
 
-        JButton fileButton = new JButton("Stwórz plik");
+        JButton fileButton = new JButton("Stwórz plik tekstowy");
         fileButton.setBounds(100,250, 200, 75);
         mazeOutput.add(fileButton);
         fileButton.setVisible(true);
@@ -180,6 +178,7 @@ public final class Okno {
             else
                 Reader = new TextMazeReader(M);
             komunikaty.setText("Otwieranie pliku...");
+            kroki = null;
             komunikaty.paintImmediately(komunikaty.getVisibleRect());
             if (Reader.open(wybor.getSelectedFile().getAbsolutePath())) {
                 //System.out.println("DEBUG Wczytywanie labiryntu: sprawdzanie formatu pliku.");
@@ -219,7 +218,6 @@ public final class Okno {
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(nazwaPliku));
                 writer.write(tekst);
-
                 writer.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -268,8 +266,9 @@ public final class Okno {
             System.out.println(M.getEndV());
             System.out.println(M.getEndVertex());*/
             bfsAlgorithm.executeAlgorithm(M.getStartVertex(), M.getEndVertex());
-            System.out.println("Najkrótsza droga: " + bfsAlgorithm.getSolution());
             kroki = bfsAlgorithm.shortestSolutionToString().toString();
+            System.out.println("Najkrótsza droga: \n" + kroki);
+
         });
         //GUI.add(przyciskRozwiaz);
         tenPanel.add(przyciskRozwiaz);
