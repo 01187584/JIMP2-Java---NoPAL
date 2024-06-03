@@ -217,7 +217,25 @@ public final class Okno {
             String nazwaPliku = zapis.getSelectedFile().getAbsolutePath() + ".txt";
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(nazwaPliku));
-                writer.write(tekst);
+                int temp;
+                for(int i=1; i<M.getRows()+1; i++)
+                {
+                    for(int j=1; j<M.getCols()+1; j++)
+                    {
+                        temp = M.getField(j, i).getType();
+                        if(temp==0)
+                            writer.write(' ');
+                        if(temp==1)
+                            writer.write('K');
+                        if(temp==2)
+                            writer.write('P');
+                        if(temp==3)
+                            writer.write('K');
+                        if(temp==4)
+                            writer.write('R');
+                    }
+                    writer.write("\n");
+                }
                 writer.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);

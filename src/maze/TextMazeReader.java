@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.util.InputMismatchException;
 
 public class TextMazeReader extends MazeReader {
+    public static final char SOLUTION_FIELD = 'R';
     public static final char WHITE_FIELD = ' ';
     public static final char BLACK_FIELD = 'X';
     public static final char ENTRANCE_FIELD = 'P';
@@ -57,6 +58,9 @@ public class TextMazeReader extends MazeReader {
         try {
             while ((character = file.read()) != -1) {
                 switch (character) {
+                    case SOLUTION_FIELD:
+                        M.getField(cur_column, cur_row).setFieldType(Field.SOLUTION_FIELD);
+                        break;
                     case WHITE_FIELD:
                         M.getField(cur_column, cur_row).setFieldType(Field.WHITE_FIELD);
                         break;
@@ -111,6 +115,8 @@ public class TextMazeReader extends MazeReader {
         try {
             while ((character = file.read()) != -1) {
                 switch (character) {
+                    case SOLUTION_FIELD:
+                        break;
                     case WHITE_FIELD:
                         break;
                     case BLACK_FIELD:
