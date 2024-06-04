@@ -28,12 +28,16 @@ public abstract class FieldState {
     /*protected void setRefField(Field F) {
         refField = F;
     }*/
+    public abstract char toChar();
     protected String toString(boolean includeVertexNum) {
         if (includeVertexNum)
             str = String.valueOf(refField.getNum());
         else
             str = "  ";
         return str;
+    }
+    public String toString() {
+        return toString(false);
     }
     protected abstract HashSet<Vertex> getAdjacentVetices();
     protected HashSet<Vertex> getAdjacentVertices(boolean isTraversable) {

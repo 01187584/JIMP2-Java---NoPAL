@@ -20,6 +20,11 @@ public class ExitState extends FieldState {
     }
 
     @Override
+    public char toChar() {
+        return 'K';
+    }
+
+    @Override
     protected String toString(boolean includeVertexNum) {
         return ConsoleColors.RED_BACKGROUND+super.toString(includeVertexNum)+ConsoleColors.RESET;
     }

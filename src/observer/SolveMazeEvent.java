@@ -7,7 +7,6 @@ import algorithm.PathfindingAlgorithm;
 import graph_v2.Vertex;
 import maze.Field;
 
-// TODO: obsłużyć tutaj interfejs algorithm.PathfindingAlgorithm i jego algorytmy
 public class SolveMazeEvent extends MazeEvent {
     public static final EventStatusSet Statuses = new EventStatusSet(MazeEvent.Statuses);
     static {
@@ -23,6 +22,7 @@ public class SolveMazeEvent extends MazeEvent {
         Statuses.put("SOLVE_MAZE_NO_SOLUTION", "Podany labirynt nie ma jakiejkolwiek ścieżki od dowolnego Pola wejścia do dowolnego Pola wyjścia.", true);
     }
     private final PathfindingAlgorithm selectedAlgorithm;
+    private String shortestSolutionString;
 
     public SolveMazeEvent(MazeEventManager MEM) {
         super(MEM, Type.SOLVE_MAZE);
@@ -34,6 +34,11 @@ public class SolveMazeEvent extends MazeEvent {
     @Override
     public void setStatus(String newStatus) {
         super.setStatus(Statuses, newStatus);
+    }
+
+    public String getShortestSolutionString() {
+        if (shortestSolutionString == null) throw new NullPointerException("shortestSolutionString jest null!");
+        return shortestSolutionString;
     }
 
     @Override
@@ -48,6 +53,7 @@ public class SolveMazeEvent extends MazeEvent {
         selectedAlgorithm.initialize(MEM.getMaze()); // Aktualizacja zmian w labiryncie
         // TODO: dodać wsparcie dla wielu wejść i wyjść w labiryncie - obecnie wybiera LOSOWE (bo HashSet)
         selectedAlgorithm.executeAlgorithm(MEM.getMaze().getStartV().iterator().next(), MEM.getMaze().getEndV().iterator().next());
+        shortestSolutionString = selectedAlgorithm.shortestSolutionToStringBuilder().toString();
         //System.out.println(MEM.getMaze().getStartV().iterator().next());
         //System.out.println(MEM.getMaze().getEndV().iterator().next());
         MEM.getMaze().setIsSolved(true);

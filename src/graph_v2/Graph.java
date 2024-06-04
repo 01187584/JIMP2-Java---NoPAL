@@ -26,6 +26,10 @@ public interface Graph {
     public Edges getE();
     public HashSet<Vertex> getStartV();
     public HashSet<Vertex> getEndV();
+    public void addStartVertex(Vertex v);
+    public void addEndVertex(Vertex v);
+    public void clearStartVertices();
+    public void clearEndVertices();
     public int getLastVertexNum();
     public void incrementLastVertexNum(); // powinno być protected, ale Java...
     public boolean getIsDirected();

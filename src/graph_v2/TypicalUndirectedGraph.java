@@ -13,8 +13,8 @@ public class TypicalUndirectedGraph implements Graph {
     Edges E;
     // TODO - zmienić checkCorrectUse na CHECK_CORRECT_USE, bo to final
     private static final boolean checkCorrectUse = true;
-    private HashSet<Vertex> StartV;
-    private HashSet<Vertex> EndV;
+    protected HashSet<Vertex> StartV;
+    protected HashSet<Vertex> EndV;
 
     public TypicalUndirectedGraph() {
         last_id++;
@@ -102,6 +102,26 @@ public class TypicalUndirectedGraph implements Graph {
     @Override
     public HashSet<Vertex> getEndV() {
         return EndV;
+    }
+
+    @Override
+    public void addStartVertex(Vertex v) {
+        StartV.add(v);
+    }
+
+    @Override
+    public void addEndVertex(Vertex v) {
+        EndV.add(v);
+    }
+
+    @Override
+    public void clearStartVertices() {
+        StartV.clear();
+    }
+
+    @Override
+    public void clearEndVertices() {
+        EndV.clear();
     }
 
     @Override

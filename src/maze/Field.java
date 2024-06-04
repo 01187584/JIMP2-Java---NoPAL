@@ -57,6 +57,11 @@ public class Field extends SimpleVertex {
         allStates.get(currentState).setState();
     }
 
+    public char toChar() {
+        if (getIsPartOfPath()) return 'R';
+        else return allStates.get(getCurrentState()).toChar();
+    }
+
     protected String toString(boolean includeVertexNum) {
         return allStates.get(currentState).toString(includeVertexNum);
     }
@@ -71,7 +76,7 @@ public class Field extends SimpleVertex {
         return allStates.get(currentState).getAdjacentVetices();
     }
 
-    protected boolean getIsPartOfPath() {
+    public boolean getIsPartOfPath() { // TODO: zmienić na protected
         return isPartOfPath;
     }
 

@@ -14,4 +14,5 @@ public interface PathfindingAlgorithm {
     ArrayList<Vertex> getSolution(int solutionNumber);
     int getSolutionLength();
     int getSolutionLength(int solutionNumber);
+    StringBuilder shortestSolutionToStringBuilder();
 }

@@ -20,6 +20,11 @@ public class EntranceState extends FieldState {
     }
 
     @Override
+    public char toChar() {
+        return 'P';
+    }
+
+    @Override
     protected String toString(boolean includeVertexNum) {
         return ConsoleColors.GREEN_BACKGROUND_BRIGHT+super.toString(includeVertexNum)+ConsoleColors.RESET;
     }

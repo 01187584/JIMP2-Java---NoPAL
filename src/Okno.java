@@ -16,6 +16,7 @@ import java.io.IOException;
 //import maze.Maze;
 //import maze.TextMazeReader;
 //import maze.MazeReader;
+import maze.Field; // TODO: usunąć ten import
 import observer.MazeEventManager;
 import observer.SolveMazeEvent;
 import observer.MazeEventListener;
@@ -31,6 +32,7 @@ public final class Okno implements MazeEventListener {
     private PodgladLabiryntu PL;
     private JScrollPane ScrollPL;
     JTextPane komunikaty; // Do komunikatów
+    private String kroki; //TODO: to raczej nie powinno się tak robić
     public Okno(MazeEventManager MEM) {
         this.MEM = MEM;
         MEM.addEventListener(this);
@@ -83,7 +85,7 @@ public final class Okno implements MazeEventListener {
                 handle_SELECT_ALGORITHM(event);
                 break;
             case SOLVE_MAZE:
-                handle_SOLVE_MAZE(event);
+                handle_SOLVE_MAZE((SolveMazeEvent)event);
                 break;
             case LOAD_MAZE:
                 handle_LOAD_MAZE(event);
@@ -98,13 +100,15 @@ public final class Okno implements MazeEventListener {
     private void handle_SELECT_ALGORITHM(MazeEvent event) {
         // TODO: dodać obsługę wybierania algorytmu
     }
-    private void handle_SOLVE_MAZE(MazeEvent event) {
+    private void handle_SOLVE_MAZE(SolveMazeEvent event) {
         switch (event.getStatus()) {
             case "OK":
+                kroki = event.getShortestSolutionString();
                 komunikaty.setText(event.getStatusMessage());
                 PL.repaint();
                 break;
             default:
+                kroki = "";
                 komunikaty.setText(event.getStatusMessage());
                 break;
         }
@@ -222,7 +226,7 @@ public final class Okno implements MazeEventListener {
         mazeOutput.setResizable(false);
         mazeOutput.setLayout(null);
 
-        JButton fileButton = new JButton("Stwórz plik");
+        JButton fileButton = new JButton("Stwórz plik tekstowy");
         fileButton.setBounds(100,250, 200, 75);
         mazeOutput.add(fileButton);
         fileButton.setVisible(true);
@@ -232,11 +236,7 @@ public final class Okno implements MazeEventListener {
         lista.setForeground(Color.BLACK); //czcionka
         lista.setEditable(false);
         lista.setLineWrap(true);
-        for(int i=1; i<=15; i++)
-        {
-            lista.append("Oto " + i + " linijka tekstu.\n");
-        }
-
+        lista.append(kroki);
         JScrollPane scroll = new JScrollPane(lista);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scroll.setBounds(50, 50, 300, 150);
@@ -279,6 +279,7 @@ public final class Okno implements MazeEventListener {
             else
                 Reader = new TextMazeReader(M);
             komunikaty.setText("Otwieranie pliku...");
+            kroki = null;
             komunikaty.paintImmediately(komunikaty.getVisibleRect());
             if (Reader.open(wybor.getSelectedFile().getAbsolutePath())) {
                 //System.out.println("DEBUG Wczytywanie labiryntu: sprawdzanie formatu pliku.");
@@ -330,8 +331,16 @@ public final class Okno implements MazeEventListener {
             String nazwaPliku = zapis.getSelectedFile().getAbsolutePath() + ".txt";
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(nazwaPliku));
-                writer.write(tekst);
-
+                Field temp;
+                for(int i=1; i<=MEM.getMaze().getRows(); i++)
+                {
+                    for(int j=1; j<=MEM.getMaze().getCols(); j++)
+                    {
+                        temp = MEM.getMaze().getField(j, i);
+                        writer.write(temp.toChar());
+                    }
+                    writer.write("\n");
+                }
                 writer.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);

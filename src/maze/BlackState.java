@@ -14,6 +14,11 @@ public class BlackState extends FieldState {
     }
 
     @Override
+    public char toChar() {
+        return 'X';
+    }
+
+    @Override
     protected String toString(boolean includeVertexNum) {
         return ConsoleColors.BLACK_BACKGROUND+super.toString(includeVertexNum)+ConsoleColors.RESET;
     }

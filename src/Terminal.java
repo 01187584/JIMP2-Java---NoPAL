@@ -67,6 +67,16 @@ public class Terminal implements MazeEventListener {
             System.out.println("UWAGA: Terminal właśnie teraz powinien wypisać jakiś ciekawy komunikat.");
         }
         else if (str != null) System.out.println(str);
+        if (event.getStatus().equals("OK")) {
+            switch (event.getType()) {
+                case SOLVE_MAZE:
+                    SolveMazeEvent SOLVE_MAZE_event = (SolveMazeEvent)event;
+                    System.out.println(SOLVE_MAZE_event.getShortestSolutionString());
+                    break;
+                default:
+                    break;
+            }
+        }
         if (event.isCurrentStatusFinal()) System.out.print(">>> ");
         expectingEvent = false;
     }

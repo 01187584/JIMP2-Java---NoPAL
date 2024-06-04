@@ -14,6 +14,11 @@ public class WhiteState extends FieldState {
     }
 
     @Override
+    public char toChar() {
+        return ' ';
+    }
+
+    @Override
     protected String toString(boolean includeVertexNum) {
         return ConsoleColors.WHITE_BACKGROUND_BRIGHT+super.toString(includeVertexNum)+ConsoleColors.RESET;
     }
