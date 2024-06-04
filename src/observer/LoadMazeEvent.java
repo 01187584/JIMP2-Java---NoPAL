@@ -81,7 +81,7 @@ public class LoadMazeEvent extends MazeEvent {
         if (notifyProgress) MEM.notifyListenersInProgress(this);
         if (!MR.validateFormat()) {
             MR.close();
-            setStatus("LOAD_MAZE_FORMAT_ERROR", MR.getFormatErrorMsg());
+            setStatus("LOAD_MAZE_FORMAT_ERROR", MR.getErrorMsg());
             if (notifyProgress) MEM.notifyListenersInProgress(this);
             return false;
         }

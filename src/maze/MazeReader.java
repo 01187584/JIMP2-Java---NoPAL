@@ -11,7 +11,7 @@ public abstract class MazeReader {
     protected boolean fileIsOpen = false; // Czy udało się otworzyć plik
     protected boolean wasFileRead = false; // Czy przeczytano już plik
     protected String filePath;
-    protected String formatErrorMsg = null;
+    protected String ErrorMsg = null;
 
     public MazeReader() {
 
@@ -58,7 +58,7 @@ public abstract class MazeReader {
         if (!fileIsOpen) throw new IllegalAccessError("Nie udało się otworzyć pliku z labiryntem.");
         formatValidated = true;
     }
-    public String getFormatErrorMsg() {
-        return formatErrorMsg;
+    public String getErrorMsg() {
+        return ErrorMsg;
     }
 }

@@ -22,7 +22,7 @@ public class BinaryMazeReader extends MazeReader {
 
 
     public boolean open(String filePath) {
-        System.out.println("Otwieramy plik.");
+        //System.out.println("Otwieramy plik.");
         tryOpen();
         try {
             file = new FileInputStream(filePath);
@@ -30,28 +30,29 @@ public class BinaryMazeReader extends MazeReader {
             fileIsOpen = true;
         } catch (Exception e) {
             System.out.println("Nie udało się otworzyć pliku z labiryntem.");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            //e.printStackTrace();
         }
         return fileIsOpen;
     }
 
     public void close() {
         tryClose();
-        System.out.println("Zamykamy plik.");
+        //System.out.println("Zamykamy plik.");
         try {
             file.close();
         } catch (Exception e) {
-            System.out.println("Wystąpił błąd przy zamykaniu pliku, ale uznajmy, że się zamknął.");
+            //System.out.println("Wystąpił błąd przy zamykaniu pliku, ale uznajmy, że się zamknął.");
         }
     }
 
     public Maze read() {
         tryRead();
-        System.out.println("Czytamy labirynt.");
+        //System.out.println("Czytamy labirynt.");
         if (M == null) {
             M = new Maze(columns, rows);
         } else {
-            System.out.println("Robię resize.");
+            //System.out.println("Robię resize.");
             M.resize(columns, rows);
         }
         int cur_column = 1;
@@ -94,7 +95,7 @@ public class BinaryMazeReader extends MazeReader {
 
     public boolean validateFormat() {
         tryValidateFormat();
-        System.out.println("Sprawdzamy format pliku z labiryntem.");
+        //System.out.println("Sprawdzamy format pliku z labiryntem.");
         formatIsValid = true;
         int fileID;
         byte escape;
@@ -170,7 +171,8 @@ public class BinaryMazeReader extends MazeReader {
             */
         } catch (IOException e){
             System.out.println("Wystąpił błąd!");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            //e.printStackTrace();
             formatIsValid = false;
         }
 

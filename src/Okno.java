@@ -152,6 +152,7 @@ public final class Okno implements MazeEventListener {
         // TODO
     }
     private void handle_SET_FIELD_TYPE(MazeEvent event) {
+        kroki = "";
         switch (event.getStatus()) {
             case "SET_FIELD_TYPE_INVALID_COORDS":
                 komunikaty.setText(event.getStatusMessage());

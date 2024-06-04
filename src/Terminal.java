@@ -59,8 +59,7 @@ public class Terminal implements MazeEventListener {
                     System.out.printf("znajdz_najkrotsza_sciezke\n");
                     break;
                 default:
-                    System.out.println("NIEZNANY_TYP_WYDARZENIA");
-                    break;
+                    throw new RuntimeException("NIEZNANY TYP WYDARZENIA");
             }
         }
         if (str == null && event.getStatus().equals("OK")) {

@@ -27,7 +27,8 @@ public class TextMazeReader extends MazeReader {
             fileIsOpen = true;
         } catch (Exception e) {
             System.out.println("Nie udało się otworzyć pliku z labiryntem.");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            //e.printStackTrace();
             //fileIsOpen = false // Już jest false
         }
         return fileIsOpen;
@@ -35,21 +36,21 @@ public class TextMazeReader extends MazeReader {
 
     public void close() {
         tryClose();
-        System.out.println("Zamykamy plik.");
+        System.out.println("Zamykam plik.");
         try {
             file.close();
         } catch (Exception e) {
-            System.out.println("Wystąpił błąd przy zamykaniu pliku, ale uznajmy, że się zamknął.");
+            //System.out.println("Wystąpił błąd przy zamykaniu pliku, ale uznajmy, że się zamknął.");
         }
     }
 
     public Maze read() {
         tryRead();
-        System.out.println("Czytamy labirynt.");
+        System.out.println("Czytam labirynt.");
         if (M == null) {
             M = new Maze(columns, rows);
         } else {
-            System.out.println("Robię resize.");
+            //System.out.println("Robię resize.");
             M.resize(columns, rows);
         }
         int character, cur_column, cur_row;
@@ -93,14 +94,14 @@ public class TextMazeReader extends MazeReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Po wczytaniu:");
+        //System.out.println("Po wczytaniu:");
         return M;
     }
 
     // Sprawdza, czy format pliku z labiryntem jest poprawny
     public boolean validateFormat() {
         tryValidateFormat();
-        System.out.println("Sprawdzamy format pliku z labiryntem.");
+        System.out.println("Sprawdzam format pliku z labiryntem.");
         formatIsValid = true;
         int max_cols = 0;
         int character, cur_column, cur_row;
@@ -133,16 +134,16 @@ public class TextMazeReader extends MazeReader {
                             if (max_cols == 0) max_cols = cur_column;
                             //else if (max_cols != cur_column) throw new InputMismatchException();
                             else if (max_cols != cur_column) {
-                                formatErrorMsg = "Nie zgadza się liczba max_cols z cur_column: "+String.valueOf(max_cols)+" "+String.valueOf(cur_column);
-                                throw new InputMismatchException(formatErrorMsg);
+                                ErrorMsg = "Liczba kolumn nie jest stała: zamiast "+String.valueOf(max_cols)+" jest "+String.valueOf(cur_column);
+                                throw new InputMismatchException(ErrorMsg);
                             }
                             cur_row++;cur_column = 0;
                         } else cur_column--; // jest później zwiększana, a chcemy zignorować
                         break;
                     default:
                         //throw new InputMismatchException();
-                        formatErrorMsg = "Nierozpoznane Pole: "+character+" ("+(char)character+")";
-                        throw new InputMismatchException(formatErrorMsg);
+                        ErrorMsg = "Nierozpoznane Pole: linia "+cur_row+", znak "+cur_column+" ("+(char)character+")";
+                        throw new InputMismatchException(ErrorMsg);
                         //break;
                 }
                 //System.out.println("DEBUG"+String.valueOf(character)+' '+String.valueOf((char)character)+' '+cur_column);
@@ -151,7 +152,8 @@ public class TextMazeReader extends MazeReader {
         } catch (Exception e) {
             System.out.println("Wykryto, że format pliku z labiryntem jest nieprawidłowy.");
             System.out.println("Przyczyna:");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            //e.printStackTrace();
             formatIsValid = false;
         }
         columns = max_cols-1;rows = cur_row-1;
@@ -159,13 +161,13 @@ public class TextMazeReader extends MazeReader {
         try {
             file.reset();
         } catch (Exception e) {
-            System.out.println("Oj niestety plik.reset() się nie udało, robimy nowy FileReader.");
+            //System.out.println("Oj niestety plik.reset() się nie udało, robimy nowy FileReader.");
             try {
                 file.close();
                 file = new FileReader(filePath);
             } catch (Exception e2) {
-                System.out.println("Nie udało się otworzyć pliku z labiryntem?");
-                e2.printStackTrace();
+                //System.out.println("Nie udało się otworzyć pliku z labiryntem?");
+                //e2.printStackTrace();
                 fileIsOpen = false;
             }
         }
