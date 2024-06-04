@@ -11,8 +11,7 @@ public class TypicalUndirectedGraph implements Graph {
     private int LastVertexNum = 0;
     HashMap<Integer, Vertex> V;
     Edges E;
-    // TODO - zmienić checkCorrectUse na CHECK_CORRECT_USE, bo to final
-    private static final boolean checkCorrectUse = true;
+    private static final boolean CHECK_CORRECT_USE = true;
     protected HashSet<Vertex> StartV;
     protected HashSet<Vertex> EndV;
 
@@ -41,7 +40,7 @@ public class TypicalUndirectedGraph implements Graph {
 
     @Override
     public Vertex getVertex(int numVertex) {
-        if (checkCorrectUse) {
+        if (CHECK_CORRECT_USE) {
             if (V.get(numVertex) == null) throw new IllegalArgumentException("Graf o id "+hashCode()+" nie ma wierzchołka o numerze "+String.valueOf(numVertex));
         }
         return V.get(numVertex);

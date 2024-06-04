@@ -2,7 +2,6 @@ package algorithm;
 
 import graph_v2.Graph;
 import graph_v2.Vertex;
-import maze.Maze;
 
 import java.util.*;
 
@@ -28,28 +27,36 @@ public class BFS implements PathfindingAlgorithm {
     }
 
     @Override
-    public ArrayList<ArrayList<Vertex>> executeAlgorithm(Vertex start, Vertex end) {
+    public ArrayList<ArrayList<Vertex>> executeAlgorithm() {
         ArrayList<ArrayList<Vertex>> results = new ArrayList<>();
-        if (graph == null || start == null || end == null) {
+        if (graph == null) {
             throw new InvalidGraphInvocation("Błędne wywołanie algorytmu BFS.");
         }
 
         Queue<List<Vertex>> queue = new LinkedList<>();
-        List<Vertex> initialPath = new ArrayList<>();
-        initialPath.add(start);
-        queue.add(initialPath);
-
+        
+        for (Vertex StartVertex : graph.getStartV()) {
+            List<Vertex> initialPath = new ArrayList<>();
+            initialPath.add(StartVertex);
+            queue.add(initialPath);
+        }
+        
+        boolean foundExit = false;
         while (!queue.isEmpty()) {
             List<Vertex> path = queue.poll();
             //Vertex current = path.getLast(); Od JDK 21
             Vertex current = getLast(path); // Mam JDK 20
-
-            if (current.equals(end)) {
-                results.add(new ArrayList<>(path));
-                if (shortestPath.isEmpty() || path.size() < shortestPath.size()) {
-                    shortestPath = new ArrayList<>(path);
+            for (Vertex EndVertex : graph.getEndV()) {
+                if (current.equals(EndVertex)) {
+                    results.add(new ArrayList<>(path));
+                    if (shortestPath.isEmpty() || path.size() < shortestPath.size()) {
+                        shortestPath = new ArrayList<>(path);
+                    }
+                    foundExit = true;
                 }
-                continue;
+            }
+            if (foundExit) {
+                foundExit = false;continue;
             }
 
             for (Vertex neighbor : current.getAdjacentVetices()) {

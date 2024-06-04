@@ -70,10 +70,10 @@ public class PodgladLabiryntu extends JPanel {
                     //int[] intData = new int[] {column, row, 0};
                     Field.State fieldState;
                     if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-                        if (MEM.getMaze().getField(column, row).getCurrentState() == Field.State.ENTRANCE_FIELD) fieldState = Field.getRandomState();
+                        if (MEM.getMaze().getField(column, row).getCurrentState() == Field.State.ENTRANCE_FIELD) fieldState = Field.State.WHITE_FIELD;
                         else fieldState = Field.State.ENTRANCE_FIELD; // ustawiamy na zielony
                     } else {
-                        if (MEM.getMaze().getField(column, row).getCurrentState() == Field.State.EXIT_FIELD) fieldState = Field.getRandomState();
+                        if (MEM.getMaze().getField(column, row).getCurrentState() == Field.State.EXIT_FIELD) fieldState = Field.State.BLACK_FIELD;
                         else fieldState = Field.State.EXIT_FIELD; // ustawiamy na czerwony
                     }
                     // TODO - do poprawy:

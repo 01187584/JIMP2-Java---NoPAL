@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PathfindingAlgorithm {
     void initialize(Graph g);
-    ArrayList<ArrayList<Vertex>> executeAlgorithm(Vertex start, Vertex end);
+    ArrayList<ArrayList<Vertex>> executeAlgorithm();
     int getSolutionAmount();
     ArrayList<Vertex> getSolution();
     ArrayList<Vertex> getSolution(int solutionNumber);

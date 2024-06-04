@@ -58,7 +58,7 @@ public class Field extends SimpleVertex {
     }
 
     public char toChar() {
-        if (getIsPartOfPath()) return 'R';
+        if (getIsPartOfPath() && getCurrentState() != State.ENTRANCE_FIELD && getCurrentState() != State.EXIT_FIELD) return 'R';
         else return allStates.get(getCurrentState()).toChar();
     }
 

@@ -19,8 +19,10 @@ public class Terminal implements MazeEventListener {
         // MazeEventManager.getMaze() jest tylko do wypisywania labiryntu w postaci tesktowej
         this.MEM = MEM;
         MEM.addEventListener(this);
-        input = new Scanner(System.in);
         System.out.print(">>> ");
+    }
+    public void start() {
+        input = new Scanner(System.in);
         while (true) {
             readUserInput();
         }
@@ -134,6 +136,7 @@ public class Terminal implements MazeEventListener {
             column = input.nextInt();
             row = input.nextInt();
             fieldType = input.next().charAt(0);
+            if (fieldType == 'O') fieldType = ' ';
             return new SetFieldTypeEvent(MEM, column, row, fieldType);
         } catch (Exception e) {
             System.out.println("Nieprawidłowy format polecenia ustaw_pole.");

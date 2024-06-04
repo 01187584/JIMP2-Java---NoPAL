@@ -51,8 +51,8 @@ public class SolveMazeEvent extends MazeEvent {
             setStatus("SOLVE_MAZE_NO_EXIT");return;
         }
         selectedAlgorithm.initialize(MEM.getMaze()); // Aktualizacja zmian w labiryncie
-        // TODO: dodać wsparcie dla wielu wejść i wyjść w labiryncie - obecnie wybiera LOSOWE (bo HashSet)
-        selectedAlgorithm.executeAlgorithm(MEM.getMaze().getStartV().iterator().next(), MEM.getMaze().getEndV().iterator().next());
+        //selectedAlgorithm.executeAlgorithm(MEM.getMaze().getStartV().iterator().next(), MEM.getMaze().getEndV().iterator().next());
+        selectedAlgorithm.executeAlgorithm();
         shortestSolutionString = selectedAlgorithm.shortestSolutionToStringBuilder().toString();
         //System.out.println(MEM.getMaze().getStartV().iterator().next());
         //System.out.println(MEM.getMaze().getEndV().iterator().next());

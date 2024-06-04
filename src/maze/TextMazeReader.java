@@ -10,6 +10,8 @@ public class TextMazeReader extends MazeReader {
     public static final char BLACK_FIELD = 'X';
     public static final char ENTRANCE_FIELD = 'P';
     public static final char EXIT_FIELD = 'K';
+    
+    public static final char SOLUTION_FIELD = 'R';
     private FileReader file;
     public TextMazeReader() {
         super();
@@ -72,6 +74,9 @@ public class TextMazeReader extends MazeReader {
                     case EXIT_FIELD:
                         M.getField(cur_column, cur_row).setFieldState(Field.State.EXIT_FIELD);
                         break;
+                    case SOLUTION_FIELD:
+                        M.getField(cur_column, cur_row).setFieldState(Field.State.WHITE_FIELD);
+                        break;
                     case 10: // LF
                         if (!CR) {
                             LF = true;
@@ -112,12 +117,10 @@ public class TextMazeReader extends MazeReader {
             while ((character = file.read()) != -1) {
                 switch (character) {
                     case WHITE_FIELD:
-                        break;
                     case BLACK_FIELD:
-                        break;
                     case ENTRANCE_FIELD:
-                        break;
                     case EXIT_FIELD:
+                    case SOLUTION_FIELD:
                         break;
                     case 10: // LF
                         if (!CR) {
