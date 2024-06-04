@@ -139,7 +139,8 @@ public final class Okno implements MazeEventListener {
                 // *Chyba* może się okazać, że labirynt zostanie narysowany 2 razy
                 ScrollPL.revalidate();
                 PL.repaint();
-                komunikaty.setText("Udało się wczytać labirynt."); // TODO - poprawić ten komunikat np. przy użyciu wydarzenia wysłanego do obserwatora MazeEventManager przez PodgladLabiryntu, które zostałoby tu obsłużone - obecnie ze względu na asynchroniczność Swinga wyświetli się to w złym momencie (przed narysowaniem)
+                komunikaty.setText(event.getStatusMessage()); // TODO - poprawić ten komunikat np. przy użyciu wydarzenia wysłanego do obserwatora MazeEventManager przez PodgladLabiryntu, które zostałoby tu obsłużone - obecnie ze względu na asynchroniczność Swinga wyświetli się to w złym momencie (przed narysowaniem)
+                //komunikaty.setText("Udało się wczytać labirynt.");
                 break;
             default:
                 ///komunikaty.setText(komunikaty.getText());

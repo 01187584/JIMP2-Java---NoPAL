@@ -89,7 +89,7 @@ public class LoadMazeEvent extends MazeEvent {
         MEM.notifyListenersInProgress(this); // Jeśli format jest prawidłowy, to zawsze powiadom
         MR.read();
         MR.close();
-        setStatus("OK");
+        setStatus("OK", "Udało się wczytać labirynt o wymiarach "+MEM.getMaze().getCols()+" x "+MEM.getMaze().getRows());
         return true;
     }
 
